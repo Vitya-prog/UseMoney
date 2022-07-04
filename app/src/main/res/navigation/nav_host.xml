@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_host"
+    app:startDestination="@id/changeFragment">
+
+    <fragment
+        android:id="@+id/changeFragment"
+        android:name="com.android.usemoney.ui.change.ChangeFragment"
+        android:label="fragment_change"
+        tools:layout="@layout/fragment_change" />
+    <fragment
+        android:id="@+id/cardFragment"
+        android:name="com.android.usemoney.ui.card.CardFragment"
+        android:label="fragment_card"
+        tools:layout="@layout/fragment_card" />
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.android.usemoney.ui.history.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" />
+    <fragment
+        android:id="@+id/planFragment"
+        android:name="com.android.usemoney.ui.plan.PlanFragment"
+        android:label="fragment_plan"
+        tools:layout="@layout/fragment_plan" />
+</navigation>
