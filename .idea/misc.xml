@@ -3,15 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/background_text.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/calendar_icon.xml" value="0.1" />
         <entry key="..\:/Programming/Project/app/src/main/res/drawable/card_icon.xml" value="0.1945" />
         <entry key="..\:/Programming/Project/app/src/main/res/drawable/chart_icon.xml" value="0.1945" />
         <entry key="..\:/Programming/Project/app/src/main/res/drawable/history-48px.xml" value="0.1945" />
         <entry key="..\:/Programming/Project/app/src/main/res/drawable/history_icon.xml" value="0.22" />
         <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon_category.xml" value="0.1" />
         <entry key="..\:/Programming/Project/app/src/main/res/drawable/plan_icon.xml" value="0.1945" />
-        <entry key="..\:/Programming/Project/app/src/main/res/layout/activity_main.xml" value="0.18" />
-        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change.xml" value="0.2" />
-        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_change.xml" value="0.33" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/activity_main.xml" value="0.2401263823064771" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change.xml" value="0.25" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_change.xml" value="0.75" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/test.xml" value="0.1" />
         <entry key="..\:/Programming/Project/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20416666666666666" />
       </map>
     </option>

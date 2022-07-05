@@ -2,12 +2,13 @@ package com.android.usemoney.ui.change
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.usemoney.R
@@ -21,22 +22,48 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 
 
 class ChangeFragment : Fragment() {
+    private lateinit var spinner:Spinner
+    private lateinit var dateViewStart:TextView
+    private lateinit var dateViewEnd:TextView
+    private var account = arrayOf("ПриватБанк", "Наличка", "Монобанк", "АльфаБанк")
     private val listChange = arrayListOf("Одежда","Еда","Лекарства","Отдых")
     private var adapter: ChangeAdapter? = ChangeAdapter()
     private lateinit var pieChart: PieChart
     private lateinit var recycleViewCosts: RecyclerView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_change, container, false)
         pieChart = view.findViewById(R.id.pieChart)
+        dateViewStart = view.findViewById(R.id.date_view_start)
+        dateViewEnd = view.findViewById(R.id.date_view_end)
         recycleViewCosts = view.findViewById(R.id.recyclerViewCosts)
         recycleViewCosts.layoutManager = LinearLayoutManager(context)
         recycleViewCosts.adapter = adapter
+        spinner = view.findViewById(R.id.spinner)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initPieChart()
         setDataToPieChart()
-        return view
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dateViewStart.setOnClickListener {
+            DatePickerFragment().show(
+                childFragmentManager, DatePickerFragment.TAG)
+        }
+        dateViewEnd.setOnClickListener {
+            DatePickerFragment().show(
+                childFragmentManager, DatePickerFragment.TAG)
+        }
+
     }
 private inner class ChangeHolder(view:View):RecyclerView.ViewHolder(view){
     private val imageView:ImageView = itemView.findViewById(R.id.imageView)
