@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/add_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/background_text.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/button_drawable.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/cafe_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/calendar_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/card_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/category_add_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/category_cafe_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/category_debt_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/category_deposit_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/category_family_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/category_food_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/category_gift_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/category_health_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/category_salary_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/category_transport_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/chart_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/debt_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/deposite_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/family_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/food_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/gift_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/health_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/history-48px.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/history_icon.xml" value="0.22" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon1.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon10.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon11.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon12.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon13.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon14.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon15.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon16.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon17.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon18.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon19.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon2.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon20.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon21.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon22.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon23.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon24.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon25.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon26.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon27.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon28.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon3.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon4.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon5.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon6.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon7.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon8.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon9.xml" value="0.2115" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/icon_category.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/plan_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/salary_icon.xml" value="0.1945" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/transport_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/activity_add.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/activity_main.xml" value="0.2401263823064771" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/dialog_fragment_account.xml" value="0.33" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/dialog_fragment_add_category.xml" value="0.18802083333333333" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/dialog_fragment_date.xml" value="0.33" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_add_category.xml" value="0.35260416666666666" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_add_change.xml" value="0.20416666666666666" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_add_plan.xml" value="0.35260416666666666" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_add_value.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_card.xml" value="0.1671195652173913" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change.xml" value="0.33" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change_cost.xml" value="0.33" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change_fragment_income.xml" value="0.18802083333333333" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change_income.xml" value="0.25" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_history.xml" value="0.22" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_plan.xml" value="0.33" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_add_plan.xml" value="0.5" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_change.xml" value="0.75" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_history.xml" value="0.67" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_history_with_date.xml" value="0.8554216867469879" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_plan.xml" value="0.5" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_view.xml" value="0.1671195652173913" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/test.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20416666666666666" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
