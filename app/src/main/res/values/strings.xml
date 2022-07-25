@@ -7,13 +7,16 @@
     <string name="title_plan">План</string>
     <string name="order_confirmation">Привет</string>
     <string name="ok">OK</string>
-
-    <string-array name="Languages">
-        <item>Java</item>
-        <item>Kotlin</item>
-        <item>Swift</item>
-        <item>Python</item>
-        <item>Scala</item>
-        <item>Perl</item>
-    </string-array>
+    <string name="account">СЧЕТА</string>
+    <string name="add">Добавить…</string>
+    <string name="add_name_category">Введите название новой категории</string>
+    <string name="cancel">Отмена</string>
+    <string name="add_value_change">Выберите категорию</string>
+    <string name="input_change">Введите значение</string>
+    <string name="pick_date">Выберите дату</string>
+    <string name="from">От</string>
+    <string name="to">До</string>
+    <string name="income">Доходы</string>
+    <string name="cost">Расходы</string>
+    <string name="budget">Бюджет</string>
 </resources>

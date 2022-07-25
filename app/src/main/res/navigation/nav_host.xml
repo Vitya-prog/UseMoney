@@ -7,9 +7,13 @@
 
     <fragment
         android:id="@+id/changeFragment"
-        android:name="com.android.usemoney.ui.change.ChangeFragment"
+        android:name="com.android.usemoney.ui.change.cost.ChangeFragmentCost"
         android:label="fragment_change"
-        tools:layout="@layout/fragment_change" />
+        tools:layout="@layout/fragment_change_cost" >
+        <action
+            android:id="@+id/action_changeFragment_to_changeFragmentIncome"
+            app:destination="@id/changeFragmentIncome" />
+    </fragment>
     <fragment
         android:id="@+id/cardFragment"
         android:name="com.android.usemoney.ui.card.CardFragment"
@@ -25,4 +29,9 @@
         android:name="com.android.usemoney.ui.plan.PlanFragment"
         android:label="fragment_plan"
         tools:layout="@layout/fragment_plan" />
+    <fragment
+        android:id="@+id/changeFragmentIncome"
+        android:name="com.android.usemoney.ui.change.income.ChangeFragmentIncome"
+        android:label="fragment_change_fragment_income"
+        tools:layout="@layout/fragment_change_income" />
 </navigation>

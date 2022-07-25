@@ -2,17 +2,17 @@ package com.android.usemoney.database.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.android.usemoney.entities.ChangeEntities
+import com.android.usemoney.entities.ChangeEntity
 
 @Dao
 interface ChangeDao {
 
-    @Query("SELECT * FROM ChangeEntities")
-    fun getChange(): LiveData<List<ChangeEntities>>
+    @Query("SELECT * FROM ChangeEntity")
+    fun getChanges(): LiveData<List<ChangeEntity>>
     @Insert
-    fun addChange(change:ChangeEntities)
+    fun addChange(change:ChangeEntity)
     @Delete
-    fun deleteChange(change:ChangeEntities)
+    fun deleteChange(change:ChangeEntity)
     @Update
-    fun updateChange(change: ChangeEntities)
+    fun updateChange(change: ChangeEntity)
 }
