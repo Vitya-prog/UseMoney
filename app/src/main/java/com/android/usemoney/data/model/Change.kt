@@ -1,12 +1,12 @@
-package com.android.usemoney.entities
+package com.android.usemoney.data.model
 
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
-@Entity
-data class ChangeEntity(
-    @PrimaryKey val id:UUID =UUID.randomUUID(),
+@Entity(tableName="change")
+data class Change(
+    @PrimaryKey val id_change:UUID =UUID.randomUUID(),
     val name:String,
     val value: Double,
     val icon: Int,

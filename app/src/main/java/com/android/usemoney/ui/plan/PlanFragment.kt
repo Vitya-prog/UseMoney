@@ -4,47 +4,40 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.usemoney.R
-import com.android.usemoney.entities.PlanEntity
+import com.android.usemoney.data.model.Plan
+import com.android.usemoney.databinding.FragmentPlanBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import com.android.usemoney.add_data.AddActivity as AddActivity
+import com.android.usemoney.ui.add.AddActivity as AddActivity
 
 private const val TAG ="PlanFragment"
+@AndroidEntryPoint
 class PlanFragment : Fragment() {
-    private val planViewModel: PlanViewModel by lazy {
-        PlanViewModel().also {
-            ViewModelProvider(this)[PlanViewModel::class.java]
-        }
-    }
+    private lateinit var fragmentPlanBinding: FragmentPlanBinding
+    private val planViewModel: PlanViewModel by viewModels()
     private var adapter = PlanViewAdapter(emptyList())
-    private lateinit var planRecycleView: RecyclerView
-    private lateinit var addPlanButton:Button
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_plan, container, false)
-        addPlanButton = view.findViewById(R.id.addPlanButton)
-        planRecycleView = view.findViewById(R.id.planRecycleView)
-        planRecycleView.layoutManager = LinearLayoutManager(context)
-//        planRecycleView.adapter = adapter
-        return view
+    ): View {
+        fragmentPlanBinding = FragmentPlanBinding.inflate(inflater, container, false)
+        fragmentPlanBinding.planRecycleView.layoutManager = LinearLayoutManager(context)
+        return fragmentPlanBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,7 +47,7 @@ class PlanFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        addPlanButton.setOnClickListener {
+        fragmentPlanBinding.addPlanButton.setOnClickListener {
             val intent = Intent(context, AddActivity::class.java)
             intent.putExtra("add","plan")
             context?.startActivity(intent)
@@ -69,9 +62,9 @@ class PlanFragment : Fragment() {
             updateUI(plans)
         }
     }
-    private fun updateUI(plans:List<PlanEntity>){
+    private fun updateUI(plans:List<Plan>){
     adapter = PlanViewAdapter(plans)
-    planRecycleView.adapter = adapter
+    fragmentPlanBinding.planRecycleView.adapter = adapter
 
 }
 
@@ -83,7 +76,7 @@ class PlanFragment : Fragment() {
         private val planImageView:ImageView = itemView.findViewById(R.id.planImageView)
         private val datePlanTextView:TextView = itemView.findViewById(R.id.datePlanTextView)
 
-        fun bind(plan:PlanEntity){
+        fun bind(plan: Plan){
            val percent = ((plan.startValue / plan.endValue)*100).toInt()
             planProgressBar.setProgress(percent,false)
           planTextView.text = plan.name
@@ -100,7 +93,7 @@ class PlanFragment : Fragment() {
 
         }
     }
-    private inner class PlanViewAdapter(var plans :List<PlanEntity>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private inner class PlanViewAdapter(var plans :List<Plan>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             val view = layoutInflater.inflate(R.layout.list_item_plan,parent,false)
                return PlanViewHolder(view)
@@ -130,10 +123,11 @@ class PlanFragment : Fragment() {
     date2e.set(2022,Calendar.JULY,10)
 
     val plans = listOf(
-        PlanEntity(UUID.randomUUID(),"Здоровье",date1s.time,date1e.time,0.0,1200.0,
+        Plan(UUID.randomUUID(),"Здоровье",date1s.time,date1e.time,0.0,1200.0,
             R.drawable.category_health_icon,""),
-        PlanEntity(UUID.randomUUID(),"Еда",date2s.time,date2e.time,0.0,800.0,
-            R.drawable.category_food_icon,""))
+        Plan(UUID.randomUUID(),"Еда",date2s.time,date2e.time,0.0,800.0,
+            R.drawable.category_food_icon,"")
+    )
     for (element in plans) {
         planViewModel.addPlan(element)
     }

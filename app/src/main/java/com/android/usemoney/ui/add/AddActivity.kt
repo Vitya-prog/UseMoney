@@ -1,4 +1,4 @@
-package com.android.usemoney.add_data
+package com.android.usemoney.ui.add
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,11 +6,14 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.android.usemoney.R
-import com.android.usemoney.add_data.category.AddCategoryFragment
-import com.android.usemoney.add_data.change.AddChangeFragment
+import com.android.usemoney.ui.add.category.AddCategoryFragment
+import com.android.usemoney.ui.add.change.AddChangeFragment
+import com.android.usemoney.ui.add.plan.AddPlanFragment
+import dagger.hilt.android.AndroidEntryPoint
+
 private const val TAG = "AddActivity"
+@AndroidEntryPoint
 class AddActivity : AppCompatActivity() {
-    private lateinit var addFragmentContainerView:FragmentContainerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)

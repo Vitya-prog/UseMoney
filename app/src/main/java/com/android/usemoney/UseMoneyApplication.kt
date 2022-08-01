@@ -1,13 +1,7 @@
 package com.android.usemoney
 
 import android.app.Application
-import com.android.usemoney.repository.UseMoneyRepository
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class UseMoneyApplication: Application()
-{
-    override fun onCreate() {
-        super.onCreate()
-        UseMoneyRepository.initialize(this)
-    }
-}
-

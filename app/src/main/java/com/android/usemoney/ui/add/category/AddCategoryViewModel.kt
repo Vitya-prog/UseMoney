@@ -1,17 +1,17 @@
-package com.android.usemoney.ui.change.income
+package com.android.usemoney.ui.add.category
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.android.usemoney.data.model.Category
 import com.android.usemoney.repository.CategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import javax.inject.Inject
 
 @HiltViewModel
-class ChangeIncomeViewModel @Inject constructor(
+class AddCategoryViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository
-) : ViewModel() {
+):ViewModel() {
 
-
+    fun addCategory(category: Category){
+        categoryRepository.addCategory(category)
+    }
 }

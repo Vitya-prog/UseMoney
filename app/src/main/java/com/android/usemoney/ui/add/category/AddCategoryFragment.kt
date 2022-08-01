@@ -1,61 +1,43 @@
-package com.android.usemoney.add_data.category
+package com.android.usemoney.ui.add.category
 
 
 
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.usemoney.MainActivity
 import com.android.usemoney.R
-import com.android.usemoney.add_data.AddActivity
-import com.android.usemoney.entities.CategoryEntity
+import com.android.usemoney.ui.add.AddActivity
+import com.android.usemoney.data.model.Category
+import com.android.usemoney.databinding.FragmentAddCategoryBinding
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 private const val TAG = "AddCategoryFragment"
+@AndroidEntryPoint
 class AddCategoryFragment : Fragment() {
-
-    private lateinit var inputNameCategory:EditText
-    private lateinit var inputIconRecyclerView: RecyclerView
-    private lateinit var okButton: Button
-    private lateinit var cancelButton: Button
-    private lateinit var typeRadioGroup: RadioGroup
-    private lateinit var incomeRadioButton: RadioButton
-    private lateinit var costRadioButton: RadioButton
+    private lateinit var binding: FragmentAddCategoryBinding
     private var icon: Int = -1
     private var adapter = InputIconViewAdapter(emptyList())
     private var data = listOf(R.drawable.cafe_icon,R.drawable.health_icon,R.drawable.food_icon
                                 ,R.drawable.debt_icon,R.drawable.deposite_icon,
                             R.drawable.family_icon,R.drawable.gift_icon,
                             R.drawable.salary_icon,R.drawable.transport_icon)
-    private val addCategoryViewModel: AddCategoryViewModel by lazy {
-        AddCategoryViewModel().also {
-            ViewModelProvider(this)[AddCategoryViewModel::class.java]
-        }
-    }
+    private val addCategoryViewModel: AddCategoryViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-       val view = inflater.inflate(R.layout.fragment_add_category, container, false)
-       inputNameCategory = view.findViewById(R.id.inputNameCategory)
-       inputIconRecyclerView = view.findViewById(R.id.inputIconRecyclerView)
-       okButton = view.findViewById(R.id.okButton)
-       cancelButton = view.findViewById(R.id.cancelButton)
-       typeRadioGroup = view.findViewById(R.id.typeRadioGroup)
-       incomeRadioButton = view.findViewById(R.id.incomeRadioButton)
-       costRadioButton = view.findViewById(R.id.costRadioButton)
-
-
-       return view
+    ): View {
+        binding = FragmentAddCategoryBinding.inflate(inflater,container,false)
+       return binding.root
     }
 private fun loadIcon() {
     for (i in 1..28){
@@ -66,36 +48,38 @@ private fun loadIcon() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        inputIconRecyclerView.layoutManager = GridLayoutManager(context,5)
+        binding.inputIconRecyclerView.layoutManager = GridLayoutManager(context,5)
         loadIcon()
         adapter = InputIconViewAdapter(data)
-        inputIconRecyclerView.adapter = adapter
+        binding.inputIconRecyclerView.adapter = adapter
 
     }
 
     override fun onStart() {
         super.onStart()
-        inputIconRecyclerView.setOnClickListener {
+        binding.inputIconRecyclerView.setOnClickListener {
 
         }
-        okButton.setOnClickListener{
+        binding.okButton.setOnClickListener{
 
-            if (inputNameCategory.text.isEmpty()) {
+            if (binding.inputNameCategory.text.isEmpty()) {
                 Toast.makeText(context,"Введите имя!",10).show()
-            } else if (!(incomeRadioButton.isChecked || costRadioButton.isChecked)){
+            } else if (!(binding.incomeRadioButton.isChecked || binding.costRadioButton.isChecked)){
                 Toast.makeText(context,"Выберите тип категории!",10).show()
             } else if (icon == -1) {
                 Toast.makeText(context,"Выберите иконку!",10).show()
             } else {
-                val type = if(incomeRadioButton.isChecked) "Доходы" else "Расходы"
-                addCategoryViewModel.addCategory(CategoryEntity(UUID.randomUUID(),
-                    inputNameCategory.text.toString(),type,0.0,
-                   icon, getRandomColor()))
+                val type = if(binding.incomeRadioButton.isChecked) "Доходы" else "Расходы"
+                addCategoryViewModel.addCategory(
+                    Category(UUID.randomUUID(),
+                        binding.inputNameCategory.text.toString(),type,0.0,
+                   icon, getRandomColor())
+                )
                AddActivity.closeActivity(activity as AddActivity)
                MainActivity.startActivity(requireContext())
             }
         }
-        cancelButton.setOnClickListener {
+        binding.cancelButton.setOnClickListener {
             AddActivity.closeActivity(activity as AddActivity)
         }
     }

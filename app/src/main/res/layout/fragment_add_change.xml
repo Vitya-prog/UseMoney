@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/AddValueFragment"
-    tools:context=".add_data.change.AddChangeFragment">
+    tools:context=".ui.add.change.AddChangeFragment">
 
 
     <TextView

@@ -2,31 +2,34 @@ package com.android.usemoney.ui.plan
 
 
 import androidx.lifecycle.*
-import com.android.usemoney.entities.PlanEntity
-import com.android.usemoney.repository.UseMoneyRepository
+import com.android.usemoney.data.model.Plan
+import com.android.usemoney.repository.PlanRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import javax.inject.Inject
+@HiltViewModel
+class PlanViewModel @Inject constructor(
+    private val planRepository: PlanRepository
+) : ViewModel() {
 
-class PlanViewModel : ViewModel() {
-
-    private val useMoneyRepository = UseMoneyRepository.get()
-    suspend fun getPlanList():List<PlanEntity> {
+    suspend fun getPlanList():List<Plan> {
          val planListDeferred = viewModelScope.async(Dispatchers.IO) {
-             useMoneyRepository.getPlan()
+             planRepository.getPlan()
          }
         return  planListDeferred.await()
     }
 
 
-    fun addPlan(plan:PlanEntity){
-        useMoneyRepository.addPlan(plan)
+    fun addPlan(plan: Plan){
+        planRepository.addPlan(plan)
     }
-    fun updatePlan(plan: PlanEntity){
-        useMoneyRepository.updatePlan(plan)
+    fun updatePlan(plan: Plan){
+        planRepository.updatePlan(plan)
     }
-      fun setStartValue(name:String,plan: PlanEntity){
+      fun setStartValue(name:String,plan: Plan){
             viewModelScope.launch(Dispatchers.IO) {
-                plan.startValue = useMoneyRepository.getStartValue(name).distinct().sum()
+                plan.startValue = planRepository.getStartValue(name).distinct().sum()
             }
-          useMoneyRepository.updatePlan(plan)
+          planRepository.updatePlan(plan)
     }
 }

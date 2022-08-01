@@ -71,9 +71,10 @@
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_add_value.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_card.xml" value="0.1671195652173913" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change.xml" value="0.33" />
-        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change_cost.xml" value="0.33" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change_cost.xml" value="0.2" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change_fragment_income.xml" value="0.18802083333333333" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change_income.xml" value="0.25" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_chart.xml" value="0.2" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_history.xml" value="0.22" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_plan.xml" value="0.33" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_add_plan.xml" value="0.5" />

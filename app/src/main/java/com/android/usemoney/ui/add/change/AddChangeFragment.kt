@@ -1,37 +1,37 @@
-package com.android.usemoney.add_data.change
+package com.android.usemoney.ui.add.change
 
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.usemoney.MainActivity
 import com.android.usemoney.R
-import com.android.usemoney.add_data.AddActivity
-import com.android.usemoney.entities.CategoryEntity
-import com.android.usemoney.entities.ChangeEntity
-import com.android.usemoney.repository.UseMoneyRepository
-import kotlinx.coroutines.CoroutineScope
+import com.android.usemoney.ui.add.AddActivity
+import com.android.usemoney.data.model.Category
+import com.android.usemoney.data.model.Change
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
 
 private const val TAG = "AddChangeFragment"
+@AndroidEntryPoint
 class AddChangeFragment : Fragment(){
     private lateinit var inputCategoryRecyclerView: RecyclerView
     private lateinit var inputValueEditText: EditText
     private lateinit var okeyButton:Button
     private lateinit var inputDateText: EditText
-    private val useMoneyRepository = UseMoneyRepository.get()
+    private val addChangeViewModel: AddChangeViewModel by viewModels()
     private var adapter = AddChangeAdapter(emptyList(),0)
     private var name: String? = null
     private var type: String = null.toString()
@@ -75,8 +75,8 @@ class AddChangeFragment : Fragment(){
                 inputDateText.text.isEmpty() -> Toast.makeText(requireContext(),"Выберите дату!",10)
                 name?.isEmpty() == true ->Toast.makeText(requireContext(),"Выберите категорию!",10)
                 else -> {
-                    useMoneyRepository.addChanges(
-                        ChangeEntity(
+                    addChangeViewModel.addChange(
+                        Change(
                             UUID.randomUUID(),
                             name.toString(),
                             inputValueEditText.text.toString().toDouble(),
@@ -87,30 +87,26 @@ class AddChangeFragment : Fragment(){
                         )
                     )
                     AddActivity.closeActivity(activity as AddActivity)
+                    MainActivity.startActivity(requireContext())
                 }
             }
         }
     }
-    private suspend fun getIconCategories():List<CategoryEntity>{
-        val iconList = CoroutineScope(Dispatchers.IO).async {
-            useMoneyRepository.getIconCategories()
-        }
-        return iconList.await()
-    }
+
     private fun loadIcons(){
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
-            val icons = getIconCategories()
+            val icons =  addChangeViewModel.getIconCategories()
             updateUI(icons)
         }
     }
-    private fun updateUI(icons:List<CategoryEntity>){
+    private fun updateUI(icons:List<Category>){
         adapter = AddChangeAdapter(icons,0)
         inputCategoryRecyclerView.adapter = adapter
     }
     private inner class AddChangeViewHolder(view: View):RecyclerView.ViewHolder(view){
         val iconButton: Button = itemView as Button
     }
-    private inner class AddChangeAdapter(val icons:List<CategoryEntity>,var selectedPos:Int = -1):RecyclerView.Adapter<AddChangeViewHolder>(){
+    private inner class AddChangeAdapter(val icons:List<Category>, var selectedPos:Int = -1):RecyclerView.Adapter<AddChangeViewHolder>(){
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddChangeViewHolder {
             val view = Button(parent.context,null, R.style.categoryButton)
             return AddChangeViewHolder(view)
@@ -144,7 +140,6 @@ class AddChangeFragment : Fragment(){
         private fun setSingleSelection(adapterPosition: Int){
         if (adapterPosition == RecyclerView.NO_POSITION) return
             notifyItemChanged(selectedPos)
-
             selectedPos = adapterPosition
             notifyItemChanged(selectedPos)
 

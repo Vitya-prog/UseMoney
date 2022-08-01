@@ -1,157 +1,165 @@
 package com.android.usemoney.ui.change.income
 
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
+import android.widget.LinearLayout
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.android.usemoney.R
-import com.android.usemoney.entities.CategoryEntity
-import com.android.usemoney.ui.change.AccountDialogFragment
-import com.android.usemoney.ui.change.DateDialogFragment
+import com.android.usemoney.data.model.Category
+import com.android.usemoney.databinding.FragmentChangeIncomeBinding
+import com.android.usemoney.ui.change.cost.ChangeCostViewModel
 import com.android.usemoney.ui.change.cost.ChangeFragmentCost
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.collections.ArrayList
 
 private const val TAG = "ChangeFragmentIncome"
+@AndroidEntryPoint
 class ChangeFragmentIncome : Fragment() {
-    private lateinit var pieChart: PieChart
-    private lateinit var accountTextView:TextView
-    private lateinit var dateTextView: TextView
-    private lateinit var button7: Button
-    private lateinit var button8: Button
-    private lateinit var button9: Button
-
+     private lateinit var binding: FragmentChangeIncomeBinding
+     private var incomeCategoryList = emptyList<Category>()
     companion object {
         fun newInstance() = ChangeFragmentIncome()
     }
 
-    private val incomeViewModel: ChangeIncomeViewModel by lazy {
-        ChangeIncomeViewModel().also {
-            ViewModelProvider(this)[ ChangeIncomeViewModel::class.java]
-        }
-    }
+    private val incomeViewModel: ChangeCostViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view =inflater.inflate(R.layout.fragment_change_income, container, false)
-        pieChart = view.findViewById(R.id.pieChartIncome)
-        accountTextView = view.findViewById(R.id.accountTextViewIncome)
-        dateTextView = view.findViewById(R.id.dateTextViewIncome)
-        button7 = view.findViewById(R.id.button7)
-        button8 = view.findViewById(R.id.button8)
-        button9 = view.findViewById(R.id.button9)
+    ): View {
+        binding = FragmentChangeIncomeBinding.inflate(inflater,container,false)
         initPieChart()
         loadData()
-        return view
+
+        return binding.root
     }
 
-private fun loadData(){
-    viewLifecycleOwner.lifecycleScope.launch{
-        val categoryList = incomeViewModel.getIncomeCategories()
-        loadValue(categoryList)
-    }
-}
-    private suspend fun loadValue(name: List<CategoryEntity>){
-        var sum = 0.0
-        for (i in 0..2) {
-            name[i].value = incomeViewModel.getChangesList(name[i].name).distinct().sum()
-            sum += incomeViewModel.getChangesList(name[i].name).distinct().sum()
+    private fun loadData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+           incomeCategoryList = incomeViewModel.getIncomeCategories()
+            showCategory()
+            setDataToPieChart(0.0,incomeCategoryList)
         }
-        setDataToPieChart(sum,name)
-        button7.text = "${name[0].name}\n${name[0].value.toInt()}\u20B4"
-        button8.text = "${name[1].name}\n${name[1].value.toInt()}\u20B4"
-        button9.text = "${name[2].name}\n${name[2].value.toInt()}\u20B4"
     }
+
+    private fun showCategory() {
+        if (incomeCategoryList.size > 3) {
+            for (i in 3..incomeCategoryList.size -1) {
+                val categoryButton = Button(requireContext(), null, R.style.categoryButton)
+                categoryButton.text = "Test"
+                val params = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                val shape = GradientDrawable()
+                shape.shape = GradientDrawable.RECTANGLE
+                shape.cornerRadius = 50f
+                shape.setColor(Color.parseColor(incomeCategoryList[i].color))
+                val drawable = resources.getDrawable(incomeCategoryList[i].icon)
+                val layerDrawable = LayerDrawable(arrayOf(shape, drawable))
+                params.setMargins(20, 0, 0, 0)
+                categoryButton.layoutParams = params
+                categoryButton.setCompoundDrawablesWithIntrinsicBounds(
+                    null,
+                    layerDrawable,
+                    null,
+                    null
+                )
+                categoryButton.text =
+                    "${incomeCategoryList[i].name}\n${incomeCategoryList[i].value.toInt()}\u20B4"
+                categoryButton.textSize = 12f
+                categoryButton.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                binding.incomeCategoriesContainer.addView(categoryButton)
+            }
+        }
+    }
+
+
     override fun onStart() {
         super.onStart()
-        pieChart.setOnClickListener {
-            val fragment = ChangeFragmentCost.newInstance()
+        binding.pieChartIncome.setOnClickListener {
+            val fragment = ChangeFragmentCost()
             parentFragmentManager
                 .beginTransaction()
-                .replace(R.id.nav_host_fragment, fragment)
+                .replace(R.id.changeContainerView, fragment)
                 .addToBackStack(null)
                 .commit()
+        }
 
-        }
-        accountTextView.setOnClickListener {
-            AccountDialogFragment().show(parentFragmentManager,"AccountDialogFragment")
-        }
-        dateTextView.setOnClickListener {
-            DateDialogFragment().show(parentFragmentManager,"DateDialogFragment")
-        }
     }
     private fun initPieChart() {
-        pieChart.setUsePercentValues(true)
-        pieChart.description.text = ""
-        pieChart.isDrawHoleEnabled = false
-        pieChart.setTouchEnabled(false)
-        pieChart.setDrawEntryLabels(false)
-        pieChart.setExtraOffsets(20f, 0f, 20f, 20f)
-        pieChart.setUsePercentValues(true)
-        pieChart.isRotationEnabled = false
-        pieChart.legend.isEnabled = false
+        binding.pieChartIncome.apply {
+            setUsePercentValues(true)
+            description.text = ""
+            isDrawHoleEnabled = false
+            setTouchEnabled(false)
+            setDrawEntryLabels(false)
+            setExtraOffsets(20f, 0f, 20f, 20f)
+            isRotationEnabled = false
+            legend.isEnabled = false
+        }
 
     }
-    private fun setDataToPieChart(sum:Double,name: List<CategoryEntity>) {
-        pieChart.setUsePercentValues(true)
-        val dataEntries = ArrayList<PieEntry>()
-        val colors: ArrayList<Int> = ArrayList()
-
+    private fun setDataToPieChart(sum:Double,name:List<Category>) {
+        val dataEntries = java.util.ArrayList<PieEntry>()
+        val colors: java.util.ArrayList<Int> = java.util.ArrayList()
+        binding.pieChartIncome.setUsePercentValues(true)
+        //set data
         if (sum == 0.0){
             dataEntries.add(PieEntry(100f))
             colors.add(Color.parseColor("#8E8E8E"))
         } else {
-            val arrayColor = arrayOf("#DAA520","#87CEFA","#20B2AA")
             for (i in name.indices){
                 if (name[i].value != 0.0){
                     dataEntries.add(PieEntry(((name[i].value / sum) * 100).toFloat()))
-                    colors.add(Color.parseColor(arrayColor[i]))
+                    colors.add(Color.parseColor(name[i].color))
                 }
             }
         }
-
         val dataSet = PieDataSet(dataEntries, "")
         val data = PieData(dataSet)
 
-        // In Percentage
         data.setValueFormatter(PercentFormatter())
         dataSet.sliceSpace = 3f
         dataSet.colors = colors
-        pieChart.data = data
+        binding.pieChartIncome.data = data
         data.setValueTextSize(15f)
-        pieChart.setExtraOffsets(5f, 10f, 5f, 5f)
-        pieChart.animateY(1400, Easing.EaseInOutQuad)
-
+        binding.pieChartIncome.apply {
+            setExtraOffsets(5f, 10f, 5f, 5f)
+            animateY(1400, Easing.EaseInOutQuad)
+        }
         //create hole in center
-        pieChart.holeRadius = 80f
-        pieChart.transparentCircleRadius = 55f
-        pieChart.isDrawHoleEnabled = true
-        pieChart.setHoleColor(Color.WHITE)
-
-
+        binding.pieChartIncome.apply {
+            holeRadius = 80f
+            transparentCircleRadius = 55f
+            isDrawHoleEnabled = true
+            setHoleColor(Color.WHITE)
+        }
         //add text in center
-        pieChart.setDrawCenterText(true)
-        pieChart.setCenterTextSize(20f)
-        pieChart.setCenterTextColor(Color.parseColor("#008000"))
-        pieChart.centerText = "+${sum.toInt()}\u20B4"
+        binding.pieChartIncome.apply {
+            setDrawCenterText(true)
+            setCenterTextSize(20f)
+            setCenterTextColor(Color.parseColor("#FF0000"))
+            centerText = "-${sum.toInt()}\u20B4"
+        }
 
 
 
-        pieChart.invalidate()
+
+        binding.pieChartIncome.invalidate()
 
     }
 

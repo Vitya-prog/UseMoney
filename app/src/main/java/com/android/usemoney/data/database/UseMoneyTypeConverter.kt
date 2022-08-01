@@ -1,4 +1,4 @@
-package com.android.usemoney.database
+package com.android.usemoney.data.database
 
 
 

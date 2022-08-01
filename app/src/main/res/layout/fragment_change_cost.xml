@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
- <androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
 
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     xmlns:app="http://schemas.android.com/apk/res-auto"
-     xmlns:tools="http://schemas.android.com/tools"
-     android:layout_width="match_parent"
-     android:layout_height="match_parent"
-     android:id ="@+id/fragmentChange"
-     tools:context=".ui.change.cost.ChangeFragmentCost">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentChange"
+    android:layout_width="match_parent"
+    android:layout_height="550dp"
+    tools:context=".ui.change.cost.ChangeFragmentCost">
 
 
  <Button
@@ -15,33 +15,26 @@
      style="@style/Widget.Material3.Button.TextButton.Icon"
      android:layout_width="wrap_content"
      android:layout_height="wrap_content"
-     android:layout_marginTop="21dp"
      android:layout_marginEnd="34dp"
-     android:layout_marginBottom="238dp"
      android:drawableTop="@drawable/category_transport_icon"
-     android:onClick="newChange"
      android:text="Транспорт\n0\u20B4"
      android:textColor="@color/black"
      android:textSize="12sp"
-     app:layout_constraintBottom_toBottomOf="parent"
      app:layout_constraintEnd_toEndOf="parent"
      app:layout_constraintStart_toEndOf="@+id/button5"
      app:layout_constraintTop_toBottomOf="@+id/pieChartCost" />
 
  <Button
      android:id="@+id/button5"
+     style="@style/Widget.Material3.Button.TextButton.Icon"
      android:layout_width="wrap_content"
      android:layout_height="wrap_content"
-     android:text="Здоровье\n0\u20B4"
-     android:textSize="12sp"
-     android:textColor="@color/black"
-     style="@style/Widget.Material3.Button.TextButton.Icon"
      android:layout_marginStart="30dp"
-     android:layout_marginTop="21dp"
      android:layout_marginEnd="30dp"
-     android:layout_marginBottom="238dp"
      android:drawableTop="@drawable/category_health_icon"
-     app:layout_constraintBottom_toBottomOf="parent"
+     android:text="Здоровье\n0\u20B4"
+     android:textColor="@color/black"
+     android:textSize="12sp"
      app:layout_constraintEnd_toStartOf="@+id/button6"
      app:layout_constraintStart_toEndOf="@+id/button4"
      app:layout_constraintTop_toBottomOf="@+id/pieChartCost" />
@@ -51,145 +44,81 @@
      android:layout_width="325dp"
      android:layout_height="227dp"
      android:layout_marginStart="181dp"
-     android:layout_marginTop="186dp"
      android:layout_marginEnd="181dp"
-     android:layout_marginBottom="300dp"
-     app:layout_constraintBottom_toBottomOf="parent"
      app:layout_constraintEnd_toEndOf="parent"
      app:layout_constraintStart_toStartOf="parent"
-     app:layout_constraintTop_toTopOf="parent" />
+     app:layout_constraintTop_toBottomOf="@+id/button1" />
 
-    <Button
-        android:id="@+id/button1"
-        style="@style/Widget.Material3.Button.TextButton.Icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="124dp"
-        android:layout_marginBottom="21dp"
-        android:drawableTop="@drawable/category_gift_icon"
-        android:text="Подарки\n0\u20B4"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/pieChartCost"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+ <Button
+     android:id="@+id/button1"
+     style="@style/Widget.Material3.Button.TextButton.Icon"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="34dp"
+     android:layout_marginBottom="19dp"
+     android:drawableTop="@drawable/category_gift_icon"
+     android:text="Подарки\n0\u20B4"
+     android:textColor="@color/black"
+     android:textSize="12sp"
+     app:layout_constraintBottom_toTopOf="@+id/pieChartCost"
+     app:layout_constraintEnd_toStartOf="@+id/button2"
+     app:layout_constraintStart_toStartOf="parent" />
 
  <Button
      android:id="@+id/button2"
+     style="@style/Widget.Material3.Button.TextButton.Icon"
      android:layout_width="wrap_content"
      android:layout_height="wrap_content"
-     android:text="Еда\n0\u20B4"
-     android:textSize="12sp"
-     android:textColor="@color/black"
-     style="@style/Widget.Material3.Button.TextButton.Icon"
      android:layout_marginStart="30dp"
-     android:layout_marginTop="124dp"
      android:layout_marginEnd="30dp"
-     android:layout_marginBottom="21dp"
      android:drawableTop="@drawable/category_food_icon"
+     android:text="Еда\n0\u20B4"
+     android:textColor="@color/black"
+     android:textSize="12sp"
      app:layout_constraintBottom_toTopOf="@+id/pieChartCost"
      app:layout_constraintEnd_toStartOf="@+id/button3"
-     app:layout_constraintStart_toEndOf="@+id/button1"
-     app:layout_constraintTop_toTopOf="parent" />
+     app:layout_constraintStart_toEndOf="@+id/button1" />
 
  <Button
      android:id="@+id/button3"
+     style="@style/Widget.Material3.Button.TextButton.Icon"
      android:layout_width="wrap_content"
      android:layout_height="wrap_content"
-     android:text="Семья\n0\u20B4"
-     android:textSize="12sp"
-     android:textColor="@color/black"
-     style="@style/Widget.Material3.Button.TextButton.Icon"
-     android:layout_marginTop="124dp"
      android:layout_marginEnd="34dp"
-     android:layout_marginBottom="21dp"
      android:drawableTop="@drawable/category_family_icon"
+     android:text="Семья\n0\u20B4"
+     android:textColor="@color/black"
+     android:textSize="12sp"
      app:layout_constraintBottom_toTopOf="@+id/pieChartCost"
      app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toEndOf="@+id/button2"
-     app:layout_constraintTop_toTopOf="parent" />
+     app:layout_constraintStart_toEndOf="@+id/button2" />
 
  <Button
      android:id="@+id/button4"
+     style="@style/Widget.Material3.Button.TextButton.Icon"
      android:layout_width="wrap_content"
      android:layout_height="wrap_content"
-     android:text="Кафе\n0\u20B4"
-     android:textSize="12sp"
-     android:textColor="@color/black"
-     style="@style/Widget.Material3.Button.TextButton.Icon"
      android:layout_marginStart="34dp"
-     android:layout_marginTop="21dp"
-     android:layout_marginBottom="238dp"
      android:drawableTop="@drawable/category_cafe_icon"
-     app:layout_constraintBottom_toBottomOf="parent"
+     android:text="Кафе\n0\u20B4"
+     android:textColor="@color/black"
+     android:textSize="12sp"
      app:layout_constraintEnd_toStartOf="@+id/button5"
      app:layout_constraintStart_toStartOf="parent"
      app:layout_constraintTop_toBottomOf="@+id/pieChartCost" />
 
  <LinearLayout
-     android:id="@+id/categoriesContainer"
+     android:id="@+id/costCategoriesContainer"
      android:layout_width="410dp"
-     android:layout_height="92dp"
+     android:layout_height="100dp"
+     android:layout_marginTop="11dp"
      android:layout_marginEnd="1dp"
-     android:layout_marginBottom="1dp"
      android:orientation="horizontal"
-     app:layout_constraintBottom_toTopOf="@+id/add_cost_category_button"
      app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintHorizontal_bias="0.0"
      app:layout_constraintStart_toStartOf="parent"
      app:layout_constraintTop_toBottomOf="@+id/button6">
 
  </LinearLayout>
 
- <Button
-     android:id="@+id/add_cost_category_button"
-     style="@style/Widget.Material3.Button.TextButton.Icon"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_marginStart="16dp"
-     android:layout_marginTop="1dp"
-     android:layout_marginEnd="251dp"
-     android:layout_marginBottom="51dp"
-     android:drawableLeft="@drawable/category_add_icon"
-     android:text="@string/add"
-     android:textColor="@color/black"
-     android:textSize="12sp"
-     app:layout_constraintBottom_toBottomOf="parent"
-     app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toStartOf="parent"
-     app:layout_constraintTop_toBottomOf="@+id/categoriesContainer" />
-
- <TextView
-     android:id="@+id/accountTextViewCost"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_marginStart="147dp"
-     android:layout_marginTop="8dp"
-     android:layout_marginEnd="147dp"
-     android:text="Все счета \u25BC"
-     android:textSize="20sp"
-     android:textColor="@color/black"
-     app:layout_constraintBottom_toTopOf="@+id/dateTextViewCost"
-     app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toStartOf="parent"
-     app:layout_constraintTop_toTopOf="parent" />
-
- <TextView
-     android:id="@+id/dateTextViewCost"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_marginStart="164dp"
-     android:layout_marginTop="39dp"
-     android:layout_marginEnd="164dp"
-     android:layout_marginBottom="20dp"
-     android:textSize="20sp"
-     android:textColor="@color/black"
-     android:text="11 июля 2022 \u25BC"
-     app:layout_constraintBottom_toTopOf="@+id/button2"
-     app:layout_constraintEnd_toEndOf="parent"
-     app:layout_constraintStart_toStartOf="parent"
-     app:layout_constraintTop_toBottomOf="@+id/accountTextViewCost" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

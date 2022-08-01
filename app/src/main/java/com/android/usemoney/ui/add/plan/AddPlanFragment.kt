@@ -1,4 +1,4 @@
-package com.android.usemoney.add_data
+package com.android.usemoney.ui.add.plan
 
 import android.app.DatePickerDialog
 import android.graphics.Color
@@ -12,20 +12,21 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.usemoney.MainActivity
 import com.android.usemoney.R
-import com.android.usemoney.entities.CategoryEntity
-import com.android.usemoney.entities.PlanEntity
-import com.android.usemoney.repository.UseMoneyRepository
-import kotlinx.coroutines.CoroutineScope
+import com.android.usemoney.data.model.Category
+import com.android.usemoney.data.model.Plan
+import com.android.usemoney.ui.add.AddActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
 
-
+@AndroidEntryPoint
 class AddPlanFragment : Fragment() {
     private lateinit var categoryRecycleView: RecyclerView
     private lateinit var firstDate: EditText
@@ -35,9 +36,9 @@ class AddPlanFragment : Fragment() {
     private var name:String = ""
     private var icon:Int = 0
     private var color:String =""
+    private val addPlanViewModel:AddPlanViewModel by viewModels()
     private val calendarF = Calendar.getInstance()
     private val calendarS = Calendar.getInstance()
-    private val useMoneyRepository = UseMoneyRepository.get()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,7 +78,8 @@ class AddPlanFragment : Fragment() {
             dialogFragment.show()
         }
         okButton.setOnClickListener {
-            useMoneyRepository.addPlan(PlanEntity(
+            addPlanViewModel.addPlan(
+                Plan(
                 UUID.randomUUID(),
                 name,
                 calendarF.time,
@@ -85,23 +87,20 @@ class AddPlanFragment : Fragment() {
                 0.0,
                 budgetEditText.text.toString().toDouble(),
                 icon,
-                color))
+                color)
+            )
             AddActivity.closeActivity(activity as AddActivity)
+            MainActivity.startActivity(requireContext())
         }
     }
-    private suspend fun getIconCategories():List<CategoryEntity>{
-        val iconList = CoroutineScope(Dispatchers.IO).async {
-            useMoneyRepository.getIconCategories()
-        }
-        return iconList.await()
-    }
+
     private fun loadIcons(){
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
-            val icons = getIconCategories()
+            val icons = addPlanViewModel.getIconCategories()
             updateUI(icons)
         }
     }
-    private fun updateUI(icons:List<CategoryEntity>){
+    private fun updateUI(icons:List<Category>){
         categoryRecycleView.layoutManager = GridLayoutManager(context,5)
         categoryRecycleView.adapter = CategoryAdapter(icons)
     }
@@ -109,7 +108,7 @@ class AddPlanFragment : Fragment() {
     private inner class CategoryViewHolder(view:View):RecyclerView.ViewHolder(view){
     var button = itemView as Button
     }
-    private inner class CategoryAdapter(val icons: List<CategoryEntity>,var selectedPos:Int = -1):
+    private inner class CategoryAdapter(val icons: List<Category>, var selectedPos:Int = -1):
         RecyclerView.Adapter<CategoryViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
             val view = Button(context,null, R.style.categoryButton)
