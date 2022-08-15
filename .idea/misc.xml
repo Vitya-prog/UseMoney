@@ -60,7 +60,10 @@
         <entry key="..\:/Programming/Project/app/src/main/res/drawable/plan_icon.xml" value="0.1945" />
         <entry key="..\:/Programming/Project/app/src/main/res/drawable/salary_icon.xml" value="0.1945" />
         <entry key="..\:/Programming/Project/app/src/main/res/drawable/transport_icon.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/drawable/unknown_icon.xml" value="0.1" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/activity_add.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/activity_add_bill.xml" value="0.20416666666666666" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/activity_add_merchant.xml" value="0.19010416666666666" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/activity_main.xml" value="0.2401263823064771" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/dialog_fragment_account.xml" value="0.33" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/dialog_fragment_add_category.xml" value="0.18802083333333333" />
@@ -69,7 +72,7 @@
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_add_change.xml" value="0.20416666666666666" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_add_plan.xml" value="0.35260416666666666" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_add_value.xml" value="0.36666666666666664" />
-        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_card.xml" value="0.1671195652173913" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_card.xml" value="0.25" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change.xml" value="0.33" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change_cost.xml" value="0.2" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_change_fragment_income.xml" value="0.18802083333333333" />
@@ -77,13 +80,16 @@
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_chart.xml" value="0.2" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_history.xml" value="0.22" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_plan.xml" value="0.33" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/fragment_privat_bank.xml" value="0.33" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_add_plan.xml" value="0.5" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_bill.xml" value="0.25" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_change.xml" value="0.75" />
-        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_history.xml" value="0.67" />
-        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_history_with_date.xml" value="0.8554216867469879" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_history.xml" value="0.5" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_history_with_date.xml" value="0.5" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/list_item_plan.xml" value="0.5" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/list_view.xml" value="0.1671195652173913" />
         <entry key="..\:/Programming/Project/app/src/main/res/layout/test.xml" value="0.1" />
+        <entry key="..\:/Programming/Project/app/src/main/res/layout/web_view.xml" value="0.203125" />
         <entry key="..\:/Programming/Project/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20416666666666666" />
       </map>
     </option>

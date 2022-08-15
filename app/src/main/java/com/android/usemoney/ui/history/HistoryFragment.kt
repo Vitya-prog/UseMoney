@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.usemoney.MainActivity
 import com.android.usemoney.R
 import com.android.usemoney.ui.add.AddActivity
 import com.android.usemoney.data.model.Change
@@ -42,6 +44,7 @@ private var adapter = HistoryViewAdapter(emptyList())
             intent.putExtra("add","change")
             context?.startActivity(intent)
         }
+        Log.d(TAG,"Start history")
         return binding.root
     }
 
@@ -50,6 +53,7 @@ private var adapter = HistoryViewAdapter(emptyList())
         historyViewModel.historyListLiveData.observe(
             viewLifecycleOwner
         ) { changes ->
+            Log.d(TAG,"$changes")
             updateUI(changes)
         }
     }
@@ -65,7 +69,7 @@ private var adapter = HistoryViewAdapter(emptyList())
 
         fun bind(change: Change){
             categoryTextView.text = change.name
-            accountTextView.text = "Наличные"
+            accountTextView.text = change.description
             var s = "-"
             var color = "#FF0000"
             if (change.type == "Доходы"){
@@ -94,7 +98,7 @@ private var adapter = HistoryViewAdapter(emptyList())
 
         fun bindWithDate(change: Change){
             categoryTextView.text = change.name
-            accountTextView.text = "Наличные"
+            accountTextView.text = change.description
             var s = "-"
             var color = "#FF0000"
             if (change.type == "Доходы"){
@@ -106,7 +110,9 @@ private var adapter = HistoryViewAdapter(emptyList())
             val shape = GradientDrawable()
             shape.shape = GradientDrawable.RECTANGLE
             shape.cornerRadius = 50f
+            Log.d(TAG, change.color)
             shape.setColor(Color.parseColor(change.color))
+
             val drawable = resources.getDrawable(change.icon)
             val layerDrawable = LayerDrawable(arrayOf(shape,drawable))
             categoryImageView.setImageDrawable(layerDrawable)
@@ -130,9 +136,14 @@ private var adapter = HistoryViewAdapter(emptyList())
                 val change = change[position]
                 holder.itemView.setOnClickListener{
                     val intent = Intent(context, AddActivity::class.java)
-                    intent.putExtra("add","change")
+                    intent.putExtra("edit","change")
+                    intent.putExtra("editChange","${change.id}")
                     context?.startActivity(intent)
                 }
+            holder.itemView.setOnLongClickListener {
+                historyViewModel.deleteChange(change)
+                true
+            }
                 if (holder.itemViewType == 0) {
                     val historyViewHolder = holder as HistoryViewHolder
                     historyViewHolder.bind(change)

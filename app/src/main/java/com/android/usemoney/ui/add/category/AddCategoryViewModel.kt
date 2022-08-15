@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.android.usemoney.data.model.Category
 import com.android.usemoney.repository.CategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -13,5 +14,12 @@ class AddCategoryViewModel @Inject constructor(
 
     fun addCategory(category: Category){
         categoryRepository.addCategory(category)
+    }
+    suspend fun getCategory(id: UUID):Category{
+        return categoryRepository.getCategory(id)
+    }
+
+    fun updateCategory(category: Category){
+        categoryRepository.updateCategory(category)
     }
 }

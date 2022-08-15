@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import com.android.usemoney.R
 import com.android.usemoney.ui.add.AddActivity
 import com.android.usemoney.data.model.Category
 import com.android.usemoney.data.model.Change
+import com.android.usemoney.databinding.FragmentAddChangeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,64 +29,71 @@ import java.util.*
 private const val TAG = "AddChangeFragment"
 @AndroidEntryPoint
 class AddChangeFragment : Fragment(){
-    private lateinit var inputCategoryRecyclerView: RecyclerView
-    private lateinit var inputValueEditText: EditText
-    private lateinit var okeyButton:Button
-    private lateinit var inputDateText: EditText
+    private lateinit var binding: FragmentAddChangeBinding
     private val addChangeViewModel: AddChangeViewModel by viewModels()
     private var adapter = AddChangeAdapter(emptyList(),0)
-    private var name: String? = null
+    private var id: String =null.toString()
+    private var name: String = null.toString()
     private var type: String = null.toString()
     private var iconChange:Int = 0
-    private var color: String = ""
+    private var color: String = null.toString()
     private val calendar = Calendar.getInstance()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_add_change, container, false)
-        inputCategoryRecyclerView = view.findViewById(R.id.inputCategoryRecyclerView)
-        inputCategoryRecyclerView.layoutManager = GridLayoutManager(context,5)
-        inputValueEditText = view.findViewById(R.id.inputValueEditText)
-        okeyButton = view.findViewById(R.id.okeyButton)
-        inputDateText = view.findViewById(R.id.inputDateEditText)
-        return view
+    ): View {
+        binding = FragmentAddChangeBinding.inflate(inflater,container,false)
+        binding.inputCategoryRecyclerView.layoutManager = GridLayoutManager(context,5)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadIcons()
+        loadData()
     }
 
     override fun onStart() {
         super.onStart()
-        inputDateText.setOnClickListener {
+        binding.inputDateEditText.setOnClickListener {
             val initialYear = calendar.get(Calendar.YEAR)
             val initialMonth = calendar.get(Calendar.MONTH)
             val initialDay = calendar.get(Calendar.DAY_OF_MONTH)
            val dialogFragment = DatePickerDialog(requireContext(),
                { view: DatePicker, year: Int, month: Int, day: Int ->
-                   inputDateText.setText("$day/$month/$year")
+                   binding.inputDateEditText.setText("$day/$month/$year")
                     calendar.set(year,month,day)
                },initialYear,initialMonth,initialDay)
             dialogFragment.show()
         }
-        okeyButton.setOnClickListener{
+        binding.okeyButton.setOnClickListener{
             when {
-               inputValueEditText.text.isEmpty()->Toast.makeText(requireContext(),"Введите значение!",10)
-                inputDateText.text.isEmpty() -> Toast.makeText(requireContext(),"Выберите дату!",10)
-                name?.isEmpty() == true ->Toast.makeText(requireContext(),"Выберите категорию!",10)
-                else -> {
+                binding.inputValueEditText.text.isEmpty()->Toast.makeText(requireContext(),"Введите значение!",10)
+                binding.inputDateEditText.text.isEmpty() -> Toast.makeText(requireContext(),"Выберите дату!",10)
+                name.isEmpty() ->Toast.makeText(requireContext(),"Выберите категорию!",10)
+                id == null.toString() -> {
                     addChangeViewModel.addChange(
                         Change(
                             UUID.randomUUID(),
-                            name.toString(),
-                            inputValueEditText.text.toString().toDouble(),
+                            name,
+                            binding.inputValueEditText.text.toString().toDouble(),
                             iconChange,
                             color,
                             calendar.time,
-                            type
-                        )
+                            type)
+                    )
+                    AddActivity.closeActivity(activity as AddActivity)
+                    MainActivity.startActivity(requireContext())
+                }
+                id!=null.toString()->{
+                    addChangeViewModel.updateChange(
+                        Change(
+                        UUID.fromString(id),
+                        name,
+                        binding.inputValueEditText.text.toString().toDouble(),
+                        iconChange,
+                        color,
+                        calendar.time,
+                        type)
                     )
                     AddActivity.closeActivity(activity as AddActivity)
                     MainActivity.startActivity(requireContext())
@@ -93,15 +102,25 @@ class AddChangeFragment : Fragment(){
         }
     }
 
-    private fun loadIcons(){
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
-            val icons =  addChangeViewModel.getIconCategories()
+    private fun loadData(){
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val icons = addChangeViewModel.getIconCategories()
+            var change: Change? = null
+            if (id != null.toString()) {
+                 change = addChangeViewModel.getChange(UUID.fromString(id))
+            }
+            if (change != null) {
+               binding.inputValueEditText.setText(change.value.toInt().toString())
+               binding.okeyButton.text = "Обновить"
+               binding.inputDateEditText.setText(change.date.toString())
+
+            }
             updateUI(icons)
         }
     }
     private fun updateUI(icons:List<Category>){
         adapter = AddChangeAdapter(icons,0)
-        inputCategoryRecyclerView.adapter = adapter
+        binding. inputCategoryRecyclerView.adapter = adapter
     }
     private inner class AddChangeViewHolder(view: View):RecyclerView.ViewHolder(view){
         val iconButton: Button = itemView as Button
@@ -113,27 +132,29 @@ class AddChangeFragment : Fragment(){
         }
 
         override fun onBindViewHolder(holder: AddChangeViewHolder, position: Int) {
-            val shape = GradientDrawable()
-            shape.shape = GradientDrawable.RECTANGLE
-            shape.cornerRadius = 50f
-            shape.setColor(Color.parseColor(icons[position].color))
-            val drawable = resources.getDrawable(icons[position].icon)
-            val layerDrawable = LayerDrawable(arrayOf(shape,drawable))
-            holder.iconButton.apply {
-                if (selectedPos == position){
-                    holder.iconButton.textSize = 16f
-                } else {
-                    holder.iconButton.textSize = 12f
-                }
-                textAlignment = View.TEXT_ALIGNMENT_CENTER
-                setCompoundDrawablesWithIntrinsicBounds(null, layerDrawable, null, null)
-                text = icons[position].name
-                setOnClickListener {
-                    type = icons[position].type
-                    name = icons[position].name
-                    iconChange = icons[position].icon
-                    color = icons[position].color
-                    setSingleSelection(holder.adapterPosition)
+            if (icons[position].name != "Неизвестен") {
+                val shape = GradientDrawable()
+                shape.shape = GradientDrawable.RECTANGLE
+                shape.cornerRadius = 50f
+                shape.setColor(Color.parseColor(icons[position].color))
+                val drawable = resources.getDrawable(icons[position].icon)
+                val layerDrawable = LayerDrawable(arrayOf(shape, drawable))
+                holder.iconButton.apply {
+                    if (selectedPos == position) {
+                        type = icons[position].type
+                        name = icons[position].name
+                        iconChange = icons[position].icon
+                        color = icons[position].color
+                        holder.iconButton.textSize = 16f
+                    } else {
+                        holder.iconButton.textSize = 12f
+                    }
+                    textAlignment = View.TEXT_ALIGNMENT_CENTER
+                    setCompoundDrawablesWithIntrinsicBounds(null, layerDrawable, null, null)
+                    text = icons[position].name
+                    setOnClickListener {
+                        setSingleSelection(holder.adapterPosition)
+                    }
                 }
             }
         }
@@ -147,6 +168,12 @@ class AddChangeFragment : Fragment(){
         override fun getItemCount(): Int = icons.size
 
     }
+companion object {
 
-
+    fun newInstance(id:String):AddChangeFragment{
+        val f = AddChangeFragment()
+        f.id = id
+        return f
+        }
+    }
 }

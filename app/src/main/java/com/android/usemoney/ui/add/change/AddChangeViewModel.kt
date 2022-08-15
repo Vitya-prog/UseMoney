@@ -5,6 +5,7 @@ import com.android.usemoney.data.model.Category
 import com.android.usemoney.data.model.Change
 import com.android.usemoney.repository.ChangeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,4 +19,8 @@ class AddChangeViewModel@Inject constructor(
         return changeRepository.getIconCategories()
     }
 
+suspend fun getChange(id: UUID):Change{
+    return changeRepository.getChange(id)
+}
+     fun updateChange(change:Change) = changeRepository.updateChange(change)
 }

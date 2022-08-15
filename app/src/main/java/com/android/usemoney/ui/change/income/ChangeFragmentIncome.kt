@@ -1,9 +1,11 @@
 package com.android.usemoney.ui.change.income
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +14,11 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.android.usemoney.MainActivity
 import com.android.usemoney.R
 import com.android.usemoney.data.model.Category
 import com.android.usemoney.databinding.FragmentChangeIncomeBinding
+import com.android.usemoney.ui.add.AddActivity
 import com.android.usemoney.ui.change.cost.ChangeCostViewModel
 import com.android.usemoney.ui.change.cost.ChangeFragmentCost
 import com.github.mikephil.charting.animation.Easing
@@ -29,7 +33,7 @@ private const val TAG = "ChangeFragmentIncome"
 @AndroidEntryPoint
 class ChangeFragmentIncome : Fragment() {
      private lateinit var binding: FragmentChangeIncomeBinding
-     private var incomeCategoryList = emptyList<Category>()
+     private var i = 0
     companion object {
         fun newInstance() = ChangeFragmentIncome()
     }
@@ -42,22 +46,30 @@ class ChangeFragmentIncome : Fragment() {
     ): View {
         binding = FragmentChangeIncomeBinding.inflate(inflater,container,false)
         initPieChart()
+        i=0
         loadData()
-
         return binding.root
     }
 
     private fun loadData() {
         viewLifecycleOwner.lifecycleScope.launch {
-           incomeCategoryList = incomeViewModel.getIncomeCategories()
-            showCategory()
-            setDataToPieChart(0.0,incomeCategoryList)
+            var sum = incomeViewModel.getIncomeSum()
+            if(sum == null){
+                sum = 0.0
+            }
+            setDataToPieChart(sum,incomeViewModel.getIncomeCategories())
+                incomeViewModel.getIncomeCategory().collect { item ->
+                    item.value = incomeViewModel.getChangesList(item.name).sum()
+                    incomeViewModel.updateCategory(item)
+                    showCategory(item)
+                }
+
         }
+
     }
 
-    private fun showCategory() {
-        if (incomeCategoryList.size > 3) {
-            for (i in 3..incomeCategoryList.size -1) {
+    private fun showCategory(category: Category) {
+
                 val categoryButton = Button(requireContext(), null, R.style.categoryButton)
                 categoryButton.text = "Test"
                 val params = LinearLayout.LayoutParams(
@@ -67,10 +79,10 @@ class ChangeFragmentIncome : Fragment() {
                 val shape = GradientDrawable()
                 shape.shape = GradientDrawable.RECTANGLE
                 shape.cornerRadius = 50f
-                shape.setColor(Color.parseColor(incomeCategoryList[i].color))
-                val drawable = resources.getDrawable(incomeCategoryList[i].icon)
+                shape.setColor(Color.parseColor(category.color))
+                val drawable = resources.getDrawable(category.icon)
                 val layerDrawable = LayerDrawable(arrayOf(shape, drawable))
-                params.setMargins(20, 0, 0, 0)
+
                 categoryButton.layoutParams = params
                 categoryButton.setCompoundDrawablesWithIntrinsicBounds(
                     null,
@@ -79,13 +91,35 @@ class ChangeFragmentIncome : Fragment() {
                     null
                 )
                 categoryButton.text =
-                    "${incomeCategoryList[i].name}\n${incomeCategoryList[i].value.toInt()}\u20B4"
+                    "${category.name}\n${category.value.toInt()}\u20B4"
                 categoryButton.textSize = 12f
                 categoryButton.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                binding.incomeCategoriesContainer.addView(categoryButton)
+                categoryButton.setOnClickListener {
+                    val intent = Intent(context, AddActivity::class.java)
+                    intent.putExtra("edit","category")
+                    intent.putExtra("editCategory","${category.id}")
+                    context?.startActivity(intent)
+                }
+                categoryButton.setOnLongClickListener {
+                   incomeViewModel.deleteCategory(category)
+                    MainActivity.closeActivity(activity as MainActivity)
+                    true
+                }
+                params.setMargins(20, 0, 0, 0)
+                if (i <= 2) {
+                    params.setMargins(175, 0, 0, 0)
+                    binding.incomeCategoriesTop.addView(categoryButton)
+                }
+                if ((i >= 3) && (i <= 5)) {
+                    params.setMargins(175, 0, 0, 0)
+                    binding.incomeCategoriesBottom.addView(categoryButton)
+                }
+                if (i >= 6) {
+                    params.setMargins(20, 0, 0, 0)
+                    binding.incomeCategoriesContainer.addView(categoryButton)
+                }
+        i++
             }
-        }
-    }
 
 
     override fun onStart() {
@@ -114,8 +148,8 @@ class ChangeFragmentIncome : Fragment() {
 
     }
     private fun setDataToPieChart(sum:Double,name:List<Category>) {
-        val dataEntries = java.util.ArrayList<PieEntry>()
-        val colors: java.util.ArrayList<Int> = java.util.ArrayList()
+        val dataEntries = ArrayList<PieEntry>()
+        val colors: ArrayList<Int> = ArrayList()
         binding.pieChartIncome.setUsePercentValues(true)
         //set data
         if (sum == 0.0){
@@ -152,8 +186,8 @@ class ChangeFragmentIncome : Fragment() {
         binding.pieChartIncome.apply {
             setDrawCenterText(true)
             setCenterTextSize(20f)
-            setCenterTextColor(Color.parseColor("#FF0000"))
-            centerText = "-${sum.toInt()}\u20B4"
+            setCenterTextColor(Color.parseColor("#983300"))
+            centerText = "+${sum.toInt()}\u20B4"
         }
 
 
@@ -162,5 +196,6 @@ class ChangeFragmentIncome : Fragment() {
         binding.pieChartIncome.invalidate()
 
     }
+
 
 }

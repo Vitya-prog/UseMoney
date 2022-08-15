@@ -15,7 +15,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/categoryTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/category_cafe_icon" />
@@ -24,14 +23,14 @@
         android:id="@+id/categoryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="18dp"
-        android:layout_marginEnd="200dp"
         android:layout_marginBottom="2dp"
         android:text="Кафе"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/accountTextView"
-        app:layout_constraintEnd_toStartOf="@+id/valueTextView"
+        app:layout_constraintStart_toEndOf="@+id/categoryImageView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -39,11 +38,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:layout_marginEnd="209dp"
         android:layout_marginBottom="6dp"
         android:text="Наличные"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/valueTextView"
         app:layout_constraintStart_toEndOf="@+id/categoryImageView"
         app:layout_constraintTop_toBottomOf="@+id/categoryTextView" />
 
@@ -51,14 +48,12 @@
         android:id="@+id/valueTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="150dp"
         android:layout_marginTop="28dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginEnd="25dp"
         android:layout_marginBottom="18dp"
         android:text="-250"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/categoryTextView"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import com.android.usemoney.R
 import com.android.usemoney.ui.add.category.AddCategoryFragment
 import com.android.usemoney.ui.add.change.AddChangeFragment
@@ -18,16 +17,15 @@ class AddActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
         val bundle = intent.extras
-        val key = bundle?.getString("add")
-        Log.d(TAG,"$key")
-        if (key == "category") {
-         switchFragment(AddCategoryFragment())
+        when(bundle?.getString("add")){
+         "category"->switchFragment(AddCategoryFragment())
+         "plan"->switchFragment(AddPlanFragment())
+         "change"->switchFragment(AddChangeFragment())
         }
-        if (key == "plan"){
-            switchFragment(AddPlanFragment())
-        }
-        if (key == "change"){
-            switchFragment(AddChangeFragment())
+        when(bundle?.getString("edit")){
+            "category"->switchFragment(AddCategoryFragment.newInstance(bundle.getString("editCategory")!!))
+//            "plan"->switchFragment(AddPlanFragment())
+            "change"->switchFragment(AddChangeFragment.newInstance(bundle.getString("editChange")!!))
         }
 
     }

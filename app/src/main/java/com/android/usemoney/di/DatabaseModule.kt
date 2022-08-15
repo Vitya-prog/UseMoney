@@ -3,6 +3,7 @@ package com.android.usemoney.di
 import android.app.Application
 import androidx.room.Room
 import com.android.usemoney.data.database.UseMoneyDataBase
+import com.android.usemoney.data.database.dao.BillDao
 import com.android.usemoney.data.database.dao.CategoryDao
 import com.android.usemoney.data.database.dao.ChangeDao
 import com.android.usemoney.data.database.dao.PlanDao
@@ -42,8 +43,14 @@ fun provideDatabase(application: Application):UseMoneyDataBase{
         return useMoneyDataBase.planDao()
     }
     @Provides
+    fun provideBillDao(useMoneyDataBase: UseMoneyDataBase): BillDao {
+        return useMoneyDataBase.billDao()
+    }
+    @Provides
     fun provideExecutor():ExecutorService{
         return Executors.newSingleThreadExecutor()
     }
+
+
 
 }

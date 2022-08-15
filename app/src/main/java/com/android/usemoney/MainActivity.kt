@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -16,6 +17,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.android.usemoney.R
+import com.android.usemoney.ui.add.AddActivity
+import com.android.usemoney.ui.history.HistoryFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,7 +26,6 @@ import dagger.hilt.android.AndroidEntryPoint
 private const val TAG ="MainActivity"
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     private lateinit var toolbar: Toolbar
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,12 +44,14 @@ class MainActivity : AppCompatActivity() {
         R.id.chartFragment,R.id.cardFragment,R.id.historyFragment,R.id.planFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
     }
     companion object {
         fun startActivity(context: Context?){
             val intent = Intent(context, MainActivity::class.java)
             context?.startActivity(intent)
+        }
+        fun closeActivity(activity: MainActivity) {
+            activity.finish()
         }
     }
 

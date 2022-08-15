@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.android.usemoney">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".UseMoneyApplication"
         android:allowBackup="true"
@@ -14,6 +16,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UseMoney"
         tools:targetApi="31">
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove">
+        </provider>
+        <activity
+            android:name=".ui.bill.add.AddMerchantActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.bill.add.AddBillActivity"
+            android:exported="false"
+            android:label="@string/title_activity_add_bill"
+            android:theme="@style/Theme.UseMoney.NoActionBar" />
         <activity
             android:name=".ui.add.AddActivity"
             android:exported="false" />

@@ -6,11 +6,12 @@ import androidx.room.PrimaryKey
 import java.util.*
 @Entity(tableName="change")
 data class Change(
-    @PrimaryKey val id_change:UUID =UUID.randomUUID(),
-    val name:String,
+    @PrimaryKey val id:UUID =UUID.randomUUID(),
+    var name:String,
     val value: Double,
-    val icon: Int,
-    val color:String,
+    var icon: Int,
+    var color:String,
     val date:Date,
-    val type:String
+    var type:String,
+    val description:String = ""
 )
