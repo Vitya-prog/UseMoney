@@ -2,8 +2,8 @@ package com.android.usemoney.repository
 
 import androidx.lifecycle.LiveData
 import com.android.usemoney.data.database.dao.ChangeDao
-import com.android.usemoney.data.model.Category
-import com.android.usemoney.data.model.Change
+import com.android.usemoney.data.local.Category
+import com.android.usemoney.data.local.Change
 import java.util.*
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -23,17 +23,11 @@ class ChangeRepository @Inject constructor(
             changeDao.updateChange(change)
         }
     }
-    suspend fun getIconCategories():List<Category>{
-        return changeDao.getIconCategories()
-    }
+    fun getIconCategories():LiveData<List<Category>> = changeDao.getIconCategories()
     suspend fun getChange(id: UUID):Change=changeDao.getChange(id)
     fun deleteChanges(change: Change){
         executor.execute {
             changeDao.deleteChange(change)
         }
-
-    }
-    suspend fun getChangeByParam(value:Double,date:Date,description:String):List<Category?> {
-        return changeDao.getChangeByParam(value,date, description)
     }
 }

@@ -1,14 +1,15 @@
 package com.android.usemoney.data.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.android.usemoney.data.model.Bill
+import com.android.usemoney.data.local.Bill
 
 @Dao
 interface BillDao {
  @Query("SELECT * FROM bill")
- suspend fun getBills():List<Bill>
+ fun getBills():LiveData<List<Bill>>
 
- @Insert
+ @Insert(onConflict = OnConflictStrategy.REPLACE)
  fun addBill(bill:Bill)
 
  @Update

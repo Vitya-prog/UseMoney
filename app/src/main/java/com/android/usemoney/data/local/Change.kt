@@ -1,4 +1,4 @@
-package com.android.usemoney.data.model
+package com.android.usemoney.data.local
 
 
 import androidx.room.Entity
@@ -13,5 +13,7 @@ data class Change(
     var color:String,
     val date:Date,
     var type:String,
-    val description:String = ""
+    val description:String = "",
+    val appcode:String = "0",
+    val currency:Double = 1.0
 )

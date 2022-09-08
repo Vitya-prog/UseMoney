@@ -1,7 +1,9 @@
 package com.android.usemoney.ui.bill.add
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
+import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,16 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import com.android.usemoney.data.local.Bill
 import com.android.usemoney.databinding.FragmentPrivatBankBinding
-import com.android.usemoney.workers.TransactionsWorker
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 private const val TAG = "PrivatBankFragment"
 @AndroidEntryPoint
@@ -32,26 +30,24 @@ class PrivatBankFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPrivatBankBinding.inflate(inflater,container,false)
 
+        binding = FragmentPrivatBankBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
         binding.addCardButton.setOnClickListener {
-            val data = Data.Builder()
-                .putString("keyId",binding.idEditText.text.toString())
-                .putString("keyCard",binding.cardEditText.text.toString())
-                .putString("keyDate",date)
-                .putString("keyPassword",binding.passwordEditText.text.toString())
-                .build()
-            val workManager = WorkManager.getInstance(context!!)
-            workManager.enqueue(
-                PeriodicWorkRequestBuilder<TransactionsWorker>(1,TimeUnit.SECONDS)
-                .setInputData(data)
-                .build())
-            activity?.finish()
+            val bill = Bill(UUID.randomUUID(), "${binding.cardEditText.text}", 0.0)
+                privatBankViewModel.addBill(
+                    bill,
+                    binding.idEditText.text.toString(),
+                    binding.cardEditText.text.toString(),
+                    date,
+                    binding.passwordEditText.text.toString(),
+                    requireContext()
+                )
+                activity?.finish()
         }
         binding.dateEditText.setOnClickListener {
             val initialYear = calendar.get(Calendar.YEAR)
@@ -59,8 +55,10 @@ class PrivatBankFragment : Fragment() {
             val initialDay = calendar.get(Calendar.DAY_OF_MONTH)
             val dialogFragment = DatePickerDialog(requireContext(),
                 { view: DatePicker, year: Int, month: Int, day: Int ->
-                    binding.dateEditText.setText("0$day.0$month.$year")
-                   date = "0$day.0$month.$year"
+                    val d = if (day < 10) "0$day" else "$day"
+                    val m = if (month < 10) "0${month + 1}" else "${month + 1}"
+                    binding.dateEditText.setText("$d.$m.$year")
+                   date = "$d.$m.$year"
                 },initialYear,initialMonth,initialDay)
 
             dialogFragment.show()

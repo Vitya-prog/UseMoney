@@ -1,9 +1,9 @@
-package com.android.usemoney.data.model
+package com.android.usemoney.data.local
 
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.android.usemoney.R
 import java.util.*
 
 @Entity(tableName="category")
@@ -12,6 +12,6 @@ data class Category(
     val name: String,
     val type:String,
     var value:Double = 0.0,
-    val icon: Int,
+    val icon: String,
     val color:String
 )

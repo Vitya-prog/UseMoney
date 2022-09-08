@@ -13,10 +13,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.android.usemoney.MainActivity
 import com.android.usemoney.R
-import com.android.usemoney.data.model.Category
+import com.android.usemoney.data.local.Category
 import com.android.usemoney.databinding.FragmentChangeIncomeBinding
 import com.android.usemoney.ui.add.AddActivity
 import com.android.usemoney.ui.change.cost.ChangeCostViewModel
@@ -28,6 +27,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 private const val TAG = "ChangeFragmentIncome"
 @AndroidEntryPoint
@@ -46,32 +46,25 @@ class ChangeFragmentIncome : Fragment() {
     ): View {
         binding = FragmentChangeIncomeBinding.inflate(inflater,container,false)
         initPieChart()
-        i=0
         loadData()
         return binding.root
     }
 
     private fun loadData() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            var sum = incomeViewModel.getIncomeSum()
-            if(sum == null){
-                sum = 0.0
+        i=0
+        incomeViewModel.incomeCategories.observe(
+            viewLifecycleOwner
+        )  {
+            setDataToPieChart(it)
+            it.forEach { category ->
+                showCategory(category,it.size)
             }
-            setDataToPieChart(sum,incomeViewModel.getIncomeCategories())
-                incomeViewModel.getIncomeCategory().collect { item ->
-                    item.value = incomeViewModel.getChangesList(item.name).sum()
-                    incomeViewModel.updateCategory(item)
-                    showCategory(item)
-                }
-
         }
 
     }
-
-    private fun showCategory(category: Category) {
+    private fun showCategory(category: Category,size:Int) {
 
                 val categoryButton = Button(requireContext(), null, R.style.categoryButton)
-                categoryButton.text = "Test"
                 val params = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -80,7 +73,7 @@ class ChangeFragmentIncome : Fragment() {
                 shape.shape = GradientDrawable.RECTANGLE
                 shape.cornerRadius = 50f
                 shape.setColor(Color.parseColor(category.color))
-                val drawable = resources.getDrawable(category.icon)
+                val drawable = resources.getDrawable(resources.getIdentifier(category.icon,"drawable",activity?.packageName))
                 val layerDrawable = LayerDrawable(arrayOf(shape, drawable))
 
                 categoryButton.layoutParams = params
@@ -91,7 +84,7 @@ class ChangeFragmentIncome : Fragment() {
                     null
                 )
                 categoryButton.text =
-                    "${category.name}\n${category.value.toInt()}\u20B4"
+                    "${category.name}\n${(category.value*100).roundToInt() / 100.0}"
                 categoryButton.textSize = 12f
                 categoryButton.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 categoryButton.setOnClickListener {
@@ -102,19 +95,18 @@ class ChangeFragmentIncome : Fragment() {
                 }
                 categoryButton.setOnLongClickListener {
                    incomeViewModel.deleteCategory(category)
-                    MainActivity.closeActivity(activity as MainActivity)
                     true
                 }
                 params.setMargins(20, 0, 0, 0)
-                if (i <= 2) {
+                if ((i <= 2) && (i<size)) {
                     params.setMargins(175, 0, 0, 0)
                     binding.incomeCategoriesTop.addView(categoryButton)
                 }
-                if ((i >= 3) && (i <= 5)) {
+                if ((i >= 3) && (i <= 5) && (i < size)) {
                     params.setMargins(175, 0, 0, 0)
                     binding.incomeCategoriesBottom.addView(categoryButton)
                 }
-                if (i >= 6) {
+                if ((i >= 6)&&(i < size)) {
                     params.setMargins(20, 0, 0, 0)
                     binding.incomeCategoriesContainer.addView(categoryButton)
                 }
@@ -147,7 +139,8 @@ class ChangeFragmentIncome : Fragment() {
         }
 
     }
-    private fun setDataToPieChart(sum:Double,name:List<Category>) {
+    private fun setDataToPieChart(name:List<Category>) {
+        val sum = name.sumOf { it.value }
         val dataEntries = ArrayList<PieEntry>()
         val colors: ArrayList<Int> = ArrayList()
         binding.pieChartIncome.setUsePercentValues(true)
@@ -187,7 +180,7 @@ class ChangeFragmentIncome : Fragment() {
             setDrawCenterText(true)
             setCenterTextSize(20f)
             setCenterTextColor(Color.parseColor("#983300"))
-            centerText = "+${sum.toInt()}\u20B4"
+            centerText = "+${(sum*100.0).roundToInt()/100.0}"
         }
 
 

@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".ui.bill.add.PrivatBankFragment">
 
+
+
     <EditText
         android:id="@+id/idEditText"
         android:layout_width="wrap_content"

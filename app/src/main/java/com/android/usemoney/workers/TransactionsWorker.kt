@@ -6,15 +6,20 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.android.usemoney.R
+import com.android.usemoney.data.api.PrivatBankApi
 import com.android.usemoney.data.database.dao.ChangeDao
-import com.android.usemoney.data.model.Change
+import com.android.usemoney.data.local.Change
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import okhttp3.*
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import org.apache.commons.codec.digest.DigestUtils
-import java.io.IOException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Named
 
 
 private const val TAG = "TransactionsWorker"
@@ -22,9 +27,10 @@ private const val TAG = "TransactionsWorker"
 class TransactionsWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
-    private val changeDao:ChangeDao
+    private val changeDao:ChangeDao,
+    @Named("transactions")
+    private val privatApi:PrivatBankApi
 ): CoroutineWorker(context,params) {
-    private val client = OkHttpClient.Builder().build()
     override suspend fun doWork(): Result {
         return try {
             val id = inputData.getString("keyId")!!
@@ -44,14 +50,14 @@ class TransactionsWorker @AssistedInject constructor(
     private suspend fun getTransaction(id: String, card: String, date: String, password: String){
         val request = createRequest(id,card,date,password)
         var response1 = ""
-        client.newCall(request).enqueue(object: Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.d(TAG,"Error:$e")
+        request.enqueue(object:Callback<String>{
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.d(TAG,"${response.body()}")
+               response1 = response.body().toString()
             }
 
-            override fun onResponse(call: Call, response: Response) {
-//                Log.d(TAG, response.peekBody(1000000).string())
-                response1 = response.peekBody(1000000).string()
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d(TAG,"Error: $t")
             }
 
         })
@@ -62,22 +68,25 @@ class TransactionsWorker @AssistedInject constructor(
         parseRequest(response1)
 
     }
-    private fun createRequest(id:String,card:String,date:String,password: String): Request {
-        val signature = DigestUtils.sha1Hex(DigestUtils.md5Hex("<oper>cmt</oper><wait>0</wait><test>0</test><payment id=\"\"><prop name=\"sd\" value=\"$date\" /><prop name=\"ed\" value=\"15.08.2022\" /><prop name=\"card\" value=\"$card\" /></payment>$password"))
+    private fun createRequest(
+        id: String,
+        card: String,
+        date: String,
+        password: String
+    ): Call<String> {
+        val today = SimpleDateFormat("dd.MM.yyyy").format(Date())
+        val signature =
+            DigestUtils.sha1Hex(DigestUtils.md5Hex("<oper>cmt</oper><wait>0</wait><test>0</test><payment id=\"\"><prop name=\"sd\" value=\"$date\" /><prop name=\"ed\" value=\"$today\" /><prop name=\"card\" value=\"$card\" /></payment>$password"))
         val soapRequest = " <request version=\"1.0\">\n" +
                 "                <merchant>\n" +
                 "                    <id>$id</id>\n" +
                 "                    <signature>$signature</signature>\n" +
                 "                </merchant>\n" +
-                "<data><oper>cmt</oper><wait>0</wait><test>0</test><payment id=\"\"><prop name=\"sd\" value=\"$date\" /><prop name=\"ed\" value=\"15.08.2022\" /><prop name=\"card\" value=\"$card\" /></payment></data>" +
+                "<data><oper>cmt</oper><wait>0</wait><test>0</test><payment id=\"\"><prop name=\"sd\" value=\"$date\" /><prop name=\"ed\" value=\"$today\" /><prop name=\"card\" value=\"$card\" /></payment></data>" +
                 "            </request>"
         val mediaType = MediaType.parse("text/xml")
         val body = RequestBody.create(mediaType, soapRequest)
-        return Request.Builder()
-            .url("https://api.privatbank.ua/p24api/rest_fiz")
-            .post(body)
-            .addHeader("content-type", "text/xml")
-            .build()
+        return privatApi.getTransaction(body)
     }
     private suspend fun parseRequest(s: String) {
         val arr = s.split("<statement")
@@ -96,28 +105,29 @@ class TransactionsWorker @AssistedInject constructor(
                 .replace("\"","")
                 .replace("=","")
                 .replace("</statements></info></data></response>]","").split(",")
-//            Log.d(TAG,arr2.toString())
-            val value = arr2[7].trim().replace("-","").replace("UAH","").toDouble()
-            searchChange(value,
-                SimpleDateFormat("yyyy-MM-dd").parse(arr2[3]), arr2[11].replace("]",""),arr2)
-
+            Log.d(TAG,arr2.toString())
+            val value = arr2[7].trim().replace("-","").replace("UAH","")
+            val type = if (arr2[7].trim().replace("UAH","")[0] == '-') "Расходы" else "Доходы"
+            Log.d(TAG, (arr2[3]+arr2[4]).trim())
+            searchChange(value.toDouble(),
+                SimpleDateFormat("yyyy-MM-dd  HH:mm:ss").parse((arr2[3]+arr2[4]).trim())!!,arr2,type)
         }
 
     }
 
-    private suspend fun searchChange(value: Double, date: Date?, replace: String, arr2:List<String>) {
-
-            if (changeDao.getChangeByParam(value,date!!,replace).isEmpty()) {
+    private suspend fun searchChange(value: Double, date: Date, arr2:List<String>,type:String) {
+            if (changeDao.getChangeByParam(arr2[2].trim()).isEmpty()) {
+                Log.d(TAG,arr2[2].trim())
                 changeDao.addChange(
                     Change(
                     UUID.randomUUID(),
-                    "Неизвестен",
+                    "Другие",
                     value,
                     R.drawable.unknown_icon,
                     "#A9A9A9",
-                    SimpleDateFormat("yyyy-MM-dd").parse(arr2[3]) ?: Date(),
-                    "Расходы",
-                    arr2[11].replace("]","")
+                    date,                    type,
+                    arr2[11].replace("]",""),
+                    arr2[2].trim()
                 ))
             }
         }

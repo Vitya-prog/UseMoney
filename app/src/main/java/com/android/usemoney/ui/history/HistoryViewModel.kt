@@ -1,7 +1,7 @@
 package com.android.usemoney.ui.history
 
 import androidx.lifecycle.ViewModel
-import com.android.usemoney.data.model.Change
+import com.android.usemoney.data.local.Change
 import com.android.usemoney.repository.ChangeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

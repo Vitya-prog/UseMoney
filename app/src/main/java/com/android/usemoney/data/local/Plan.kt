@@ -1,4 +1,5 @@
-package com.android.usemoney.data.model
+package com.android.usemoney.data.local
+
 
 
 import androidx.room.Entity
@@ -10,7 +11,7 @@ data class Plan(
     val name: String,
     val dateFirst: Date,
     val dateSecond: Date,
-    var startValue: Double,
+    val startValue: Double,
     val endValue: Double,
     val icon: Int,
     val color:String

@@ -12,23 +12,19 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="265dp"
-        android:layout_marginBottom="14dp"
         android:text="@string/add_value_change"
-        app:layout_constraintBottom_toTopOf="@+id/inputCategoryRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/inputCategoryRecyclerView"
-        android:layout_width="412dp"
-        android:layout_height="265dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/inputValueEditText"
+        android:layout_width="408dp"
+        android:layout_height="186dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -37,14 +33,12 @@
         android:id="@+id/inputValueEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="194dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="@string/input_change"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputCategoryRecyclerView" />
 
@@ -53,30 +47,70 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="301dp"
-        android:layout_marginTop="300dp"
         android:layout_marginEnd="22dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="50dp"
         android:text="@string/ok"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputCategoryRecyclerView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/inputDateEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginTop="49dp"
-        android:layout_marginEnd="191dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:cursorVisible="false"
         android:ems="10"
+        android:focusable="false"
         android:hint="@string/pick_date"
         android:inputType="date"
-        android:minHeight="48dp"
-        android:focusable="false"
         android:longClickable="false"
-        android:cursorVisible="false"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:minHeight="48dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputValueEditText" />
+
+    <EditText
+        android:id="@+id/decriptionEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/decription"
+        android:inputType="textMultiLine"
+        android:minHeight="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputDateEditText" />
+
+    <TextView
+        android:id="@+id/in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="@string/in"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/inputValueEditText"
+        app:layout_constraintTop_toBottomOf="@+id/inputCategoryRecyclerView" />
+
+    <TextView
+        android:id="@+id/currencyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="44dp"
+        android:text="$"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/in"
+        app:layout_constraintTop_toBottomOf="@+id/inputCategoryRecyclerView" />
+
+    <Spinner
+        android:id="@+id/addChangeSpinner"
+        android:layout_width="50dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="45dp"
+        android:entries="@array/currency"
+        app:layout_constraintStart_toEndOf="@+id/currencyTextView"
+        app:layout_constraintTop_toBottomOf="@+id/inputCategoryRecyclerView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

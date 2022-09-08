@@ -1,40 +1,45 @@
 package com.android.usemoney.di
 
+import com.android.usemoney.data.api.PrivatBankApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.MediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import javax.inject.Singleton
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
+import javax.inject.Named
 
 @Module
 @InstallIn(SingletonComponent::class)
 class ApiModule {
 
-    @Singleton
     @Provides
-    fun provideRequest(): Request {
-        val soapRequest = " <request version=\"1.0\">\n" +
-                "                <merchant>\n" +
-                "                    <id>209275</id>\n" +
-                "                    <signature>95c164fa5be9f84952fb53608e0bb5780ff5aa92</signature>\n" +
-                "                </merchant>\n" +
-                "<data><oper>cmt</oper><wait>0</wait><test>0</test><payment id=\"\"><prop name=\"sd\" value=\"01.08.2022\" /><prop name=\"ed\" value=\"10.08.2022\" /><prop name=\"card\" value=\"4149499396308270\" /></payment></data>" +
-                "            </request>"
-        val mediaType = MediaType.parse("text/xml")
-        val body = RequestBody.create(mediaType, soapRequest)
-        return Request.Builder()
-            .url("https://api.privatbank.ua/p24api/rest_fiz")
-            .post(body)
-            .addHeader("content-type", "text/xml")
+    @Named("transactions")
+    fun provideTransactionsRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://api.privatbank.ua/p24api/")
+            .addConverterFactory(ScalarsConverterFactory.create())
             .build()
     }
 
     @Provides
-    fun provideClient():OkHttpClient{
-        return OkHttpClient.Builder().build()
+    @Named("currency")
+    fun provideCurrencyRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://api.privatbank.ua/p24api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+    @Provides
+    @Named("transactions")
+    fun provideTransactionsPrivatBankApi(@Named("transactions")retrofit: Retrofit):PrivatBankApi {
+        return retrofit.create(PrivatBankApi::class.java)
+    }
+
+    @Provides
+    @Named("currency")
+    fun provideCurrencyPrivatBankApi(@Named("currency")retrofit: Retrofit):PrivatBankApi {
+        return retrofit.create(PrivatBankApi::class.java)
     }
 }

@@ -4,6 +4,7 @@ package com.android.usemoney.ui.change.cost
 
 
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -14,13 +15,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.android.usemoney.MainActivity
 import com.android.usemoney.R
-import com.android.usemoney.data.model.Category
+import com.android.usemoney.data.local.Category
 import com.android.usemoney.databinding.FragmentChangeCostBinding
 import com.android.usemoney.ui.add.AddActivity
 import com.android.usemoney.ui.change.income.ChangeFragmentIncome
@@ -30,17 +31,16 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 private const val TAG ="ChangeFragmentCost"
 @AndroidEntryPoint
 class ChangeFragmentCost : Fragment() {
     private lateinit var binding:FragmentChangeCostBinding
     private val costViewModel: ChangeCostViewModel by viewModels()
-    private var costCategoryList: List<Category> = emptyList()
     private var i = 0
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,16 +48,15 @@ class ChangeFragmentCost : Fragment() {
     ): View {
         binding = FragmentChangeCostBinding.inflate(inflater,container,false)
         initPieChart()
-        i=0
         loadData()
         return binding.root
     }
 
 
 
-    private fun showCategory(category:Category){
-        val categoryButton = Button(requireContext(), null, R.style.categoryButton)
-        categoryButton.text = "Test"
+
+    private fun showCategory(category:Category,size:Int){
+        val button = Button(requireContext(), null, R.style.categoryButton)
         val params = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -66,65 +65,65 @@ class ChangeFragmentCost : Fragment() {
                 shape.shape = GradientDrawable.RECTANGLE
                 shape.cornerRadius = 50f
                 shape.setColor(Color.parseColor(category.color))
-                val drawable = resources.getDrawable(category.icon)
+                val drawable = resources.getDrawable(resources.getIdentifier(category.icon,"drawable",activity?.packageName))
                 val layerDrawable = LayerDrawable(arrayOf(shape, drawable))
                 params.setMargins(20, 0, 0, 0)
-                categoryButton.layoutParams = params
-                categoryButton.setCompoundDrawablesWithIntrinsicBounds(
+                button.layoutParams = params
+                button.setCompoundDrawablesWithIntrinsicBounds(
                     null,
                     layerDrawable,
                     null,
                     null
                 )
-                categoryButton.text =
-                    "${category.name}\n${category.value.toInt()}\u20B4"
-                categoryButton.textSize = 12f
-                categoryButton.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                categoryButton.setOnClickListener {
+                button.text =
+                    "${category.name}\n${(category.value*100).roundToInt() / 100.0}"
+                button.textSize = 12f
+                button.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                button.setOnClickListener {
                     val intent = Intent(context, AddActivity::class.java)
                     intent.putExtra("edit","category")
                     intent.putExtra("editCategory","${category.id}")
                     context?.startActivity(intent)
                 }
-                categoryButton.setOnLongClickListener {
+                button.setOnLongClickListener {
                     costViewModel.deleteCategory(category)
-                    MainActivity.closeActivity(activity as MainActivity)
                     true
                 }
-                if (i <= 2) {
+                if ((i <= 2) && (i < size)) {
                     params.setMargins(175, 0, 0, 0)
-                    binding.costCategoriesTop.addView(categoryButton)
+                    binding.costCategoriesTop.addView(button)
                 }
-                if ((i >= 3) && (i <= 5)) {
+                if ((i >= 3) && (i <= 5) && (i < size)) {
                     params.setMargins(175, 0, 0, 0)
-                    binding.costCategoriesBottom.addView(categoryButton)
+                    binding.costCategoriesBottom.addView(button)
                 }
-                if (i >= 6) {
-                    binding.costCategoriesContainer.addView(categoryButton)
+                if ((i >= 6) && (i < size)) {
+                    binding.costCategoriesContainer.addView(button)
                 }
         i++
 
     }
-
     private fun loadData() {
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            costCategoryList = costViewModel.getCostCategories()
-            createCategory(costCategoryList)
-            var sum = costViewModel.getCostSum()
-            if(sum == null){
-                sum = 0.0
-            }
-            setDataToPieChart(sum, costViewModel.getCostCategories())
-
-                costViewModel.getCostCategory().collect { item ->
-                    item.value = costViewModel.getChangesList(item.name).sum()
-                    costViewModel.updateCategory(item)
-                    showCategory(item)
+        i=0
+        val dateFrom = SimpleDateFormat("dd.MM.yyyy").parse("${binding.dateFromTextView.text}")!!
+        val dateTo = SimpleDateFormat("dd.MM.yyyy").parse("${binding.dateToTextView.text}")!!
+        costViewModel.selectDate(dateFrom.time)
+        costViewModel.dateFrom.observe(
+            viewLifecycleOwner
+        ){
+            costViewModel.getCostCategories(dateTo.time,it).observe(
+                viewLifecycleOwner
+            )  { categories->
+                setDataToPieChart(categories)
+                categories.forEach { category ->
+                    showCategory(category,categories.size)
                 }
-
             }
+        }
+
 }
+
+
 
 
     companion object {
@@ -141,7 +140,27 @@ class ChangeFragmentCost : Fragment() {
                     .replace(R.id.changeContainerView,fragment)
                     .commit()
         }
+        binding.dateToTextView.setOnClickListener {
+        setDate(binding.dateToTextView)
+        }
+        binding.dateFromTextView.setOnClickListener {
+            setDate(binding.dateFromTextView)
+        }
 
+    }
+    private fun setDate(view: TextView) {
+        val calendar = Calendar.getInstance()
+        val initialYear = calendar.get(Calendar.YEAR)
+        val initialMonth = calendar.get(Calendar.MONTH)
+        val initialDay = calendar.get(Calendar.DAY_OF_MONTH)
+        val dialogFragment = DatePickerDialog(requireContext(),
+            { _: DatePicker, year: Int, month: Int, day: Int ->
+                val d = if (day < 10) "0$day" else "$day"
+                val m = if (month <= 9) "0${month + 1}" else "${month + 1}"
+                view.text = "$d.$m.$year"
+                costViewModel.selectDate(SimpleDateFormat("dd.MM.yyyy").parse("${binding.dateFromTextView.text}")!!.time)
+            },initialYear,initialMonth,initialDay)
+        dialogFragment.show()
     }
     private fun initPieChart() {
         binding.pieChartCost.apply {
@@ -156,7 +175,8 @@ class ChangeFragmentCost : Fragment() {
         }
 
     }
-    private fun setDataToPieChart(sum:Double,name:List<Category>) {
+    private fun setDataToPieChart(name:List<Category>) {
+        val sum = name.sumOf { it.value }
         val dataEntries = ArrayList<PieEntry>()
         val colors: ArrayList<Int> = ArrayList()
         binding.pieChartCost.setUsePercentValues(true)
@@ -196,29 +216,11 @@ class ChangeFragmentCost : Fragment() {
             setDrawCenterText(true)
             setCenterTextSize(20f)
             setCenterTextColor(Color.parseColor("#FF0000"))
-            centerText = "-${sum.toInt()}\u20B4"
+            centerText = "-${(sum*100.0).roundToInt()/100.0}"
         }
-
-
-
 
         binding.pieChartCost.invalidate()
 
-    }
-    private fun createCategory(categories:List<Category>) {
-        if (categories.isEmpty()){
-            costViewModel.addCategory(Category(UUID.randomUUID(),"Подарки","Расходы",0.0, R.drawable.category_gift_icon,"#C71585"))
-            costViewModel.addCategory(Category(UUID.randomUUID(),"Еда","Расходы",0.0,R.drawable.category_food_icon,"#228B22"))
-            costViewModel.addCategory(Category(UUID.randomUUID(),"Семья","Расходы",0.0,R.drawable.category_family_icon,"#FF8A65"))
-            costViewModel.addCategory(Category(UUID.randomUUID(),"Кафе","Расходы",0.0,R.drawable.category_cafe_icon,"#FFF176"))
-            costViewModel.addCategory(Category(UUID.randomUUID(),"Здоровье","Расходы",0.0,R.drawable.category_health_icon,"#4DD0E1"))
-            costViewModel.addCategory(Category(UUID.randomUUID(),"Транспорт","Расходы",0.0,R.drawable.category_transport_icon,"#FFDEAD"))
-            costViewModel.addCategory(Category(UUID.randomUUID(),"Зарплата","Доходы",0.0,R.drawable.category_salary_icon,"#DAA520"))
-            costViewModel.addCategory(Category(UUID.randomUUID(),"Депозит","Доходы",0.0,R.drawable.category_deposit_icon,"#87CEFA"))
-            costViewModel.addCategory(Category(UUID.randomUUID(),"Долг","Доходы",0.0,R.drawable.category_debt_icon,"#20B2AA"))
-            costViewModel.addCategory(Category(UUID.randomUUID(),"Неизвестен","",0.0, R.drawable.unknown_icon,"#A9A9A9"))
-
-        }
     }
 
 }

@@ -1,9 +1,5 @@
 package com.android.usemoney.ui.add.category
 
-
-
-
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.android.usemoney.MainActivity
 import com.android.usemoney.R
+import com.android.usemoney.adapters.IconAdapter
 import com.android.usemoney.ui.add.AddActivity
-import com.android.usemoney.data.model.Category
+import com.android.usemoney.data.local.Category
 import com.android.usemoney.databinding.FragmentAddCategoryBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -26,16 +22,16 @@ import java.util.*
 import kotlin.math.roundToInt
 
 private const val TAG = "AddCategoryFragment"
+var icon: Int = -1
 @AndroidEntryPoint
 class AddCategoryFragment : Fragment() {
     private lateinit var binding: FragmentAddCategoryBinding
     private var categoryId:String? = null
-    private var icon: Int = -1
-    private var adapter = InputIconViewAdapter(emptyList())
+    private var adapter = IconAdapter()
     private var data = listOf(R.drawable.cafe_icon,R.drawable.health_icon,R.drawable.food_icon
                                 ,R.drawable.debt_icon,R.drawable.deposite_icon,
                             R.drawable.family_icon,R.drawable.gift_icon,
-                            R.drawable.salary_icon,R.drawable.transport_icon)
+                            R.drawable.salary_icon,R.drawable.transport_icon,R.drawable.unknown_icon)
     private val addCategoryViewModel: AddCategoryViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +40,8 @@ class AddCategoryFragment : Fragment() {
         binding = FragmentAddCategoryBinding.inflate(inflater,container,false)
         binding.inputIconRecyclerView.layoutManager = GridLayoutManager(context,5)
         loadIcon()
-        adapter = InputIconViewAdapter(data)
+        adapter = IconAdapter()
+        adapter.submitList(data)
         binding.inputIconRecyclerView.adapter = adapter
             if (categoryId != null){
                 loadCategory()
@@ -77,7 +74,6 @@ class AddCategoryFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         binding.okButton.setOnClickListener{
-
             if (binding.inputNameCategory.text.isEmpty()) {
                 Toast.makeText(context,"Введите имя!",10).show()
             } else if (!(binding.incomeRadioButton.isChecked || binding.costRadioButton.isChecked)){
@@ -90,7 +86,7 @@ class AddCategoryFragment : Fragment() {
                     Category(UUID.randomUUID(),
                         binding.inputNameCategory.text.toString(),
                         type,0.0,
-                        icon,
+                        icon.toString(),
                         getRandomColor())
                 )
                AddActivity.closeActivity(activity as AddActivity)
@@ -102,7 +98,7 @@ class AddCategoryFragment : Fragment() {
                         binding.inputNameCategory.text.toString(),
                         type,
                         0.0,
-                        icon,
+                        icon.toString(),
                         getRandomColor())
                 )
                 AddActivity.closeActivity(activity as AddActivity)
@@ -125,41 +121,6 @@ class AddCategoryFragment : Fragment() {
         color += letters[(random.nextFloat() * 15).roundToInt()]
         Log.d(TAG, color)
         return color
-    }
-    private inner class InputIconViewHolder(view:View):RecyclerView.ViewHolder(view){
-         val iconImageView:ImageView = itemView as ImageView
-    }
-    private inner class InputIconViewAdapter(val dataList:List<Int>,var selectedPos:Int = -1):RecyclerView.Adapter<InputIconViewHolder>(){
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InputIconViewHolder {
-            val view = ImageView(parent.context)
-            view.setBackgroundColor(Color.parseColor("#b3b4fc"))
-            return InputIconViewHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: InputIconViewHolder, position: Int) {
-            holder.iconImageView.apply {
-                setImageResource(dataList[position])
-                if (selectedPos == position){
-                    holder.iconImageView.setBackgroundColor(Color.parseColor("#949494"))
-                } else {
-                    holder.iconImageView.setBackgroundColor(Color.parseColor("#b3b4fc"))
-                }
-            }
-            holder.iconImageView.setOnClickListener {
-                 icon = dataList[position]
-                setSingleSelection(holder.adapterPosition)
-            }
-        }
-        private fun setSingleSelection(adapterPosition: Int){
-            if (adapterPosition == RecyclerView.NO_POSITION) return
-            notifyItemChanged(selectedPos)
-            selectedPos = adapterPosition
-            notifyItemChanged(selectedPos)
-
-        }
-
-        override fun getItemCount(): Int = dataList.size
     }
     companion object {
         fun newInstance(id:String):AddCategoryFragment{

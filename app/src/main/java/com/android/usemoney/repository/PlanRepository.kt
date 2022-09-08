@@ -1,16 +1,17 @@
 package com.android.usemoney.repository
 
+import androidx.lifecycle.LiveData
 import com.android.usemoney.data.database.dao.PlanDao
-import com.android.usemoney.data.model.Category
-import com.android.usemoney.data.model.Plan
+import com.android.usemoney.data.local.Category
+import com.android.usemoney.data.local.Plan
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
 class PlanRepository @Inject constructor(
-    private val planDao: PlanDao
+    private val planDao: PlanDao,
 ) {
     private val executor = Executors.newSingleThreadExecutor()
-    suspend fun getPlan():List<Plan> = planDao.getPlan()
+    fun getPlan(): LiveData<List<Plan>> = planDao.getPlan()
     fun addPlan(plan: Plan) {
         executor.execute {
             planDao.addPlan(plan)
@@ -21,10 +22,11 @@ class PlanRepository @Inject constructor(
             planDao.updatePlan(plan)
         }
     }
-    suspend fun getStartValue(name:String): List<Double> {
-        return planDao.getStartValue(name)
-    }
-    suspend fun getIconCategories():List<Category>{
-        return planDao.getIconCategories()
+    fun getIconCategories(): LiveData<List<Category>> = planDao.getIconCategories()
+
+    fun deletePlan(plan: Plan) {
+        executor.execute {
+            planDao.deletePlan(plan)
+        }
     }
 }

@@ -1,11 +1,11 @@
 package com.android.usemoney.ui.bill
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.android.usemoney.data.model.Bill
+import androidx.work.WorkManager
+import com.android.usemoney.data.local.Bill
 import com.android.usemoney.repository.BillRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import javax.inject.Inject
 
 @HiltViewModel
@@ -13,13 +13,11 @@ class BillViewModel @Inject constructor(
     private val billRepository: BillRepository
 ) : ViewModel() {
 
-    suspend fun getBills():List<Bill>{
-        val billList = viewModelScope.async {
-            billRepository.getBill()
-        }
-        return billList.await()
-    }
-    fun addBill(bill: Bill){
-        billRepository.addBill(bill)
+    val bills = billRepository.getBill()
+
+    fun deleteBill(bill: Bill,context: Context) {
+        val workManager = WorkManager.getInstance(context)
+        workManager.cancelAllWorkByTag("PrivatBank")
+        billRepository.deleteBill(bill)
     }
 }

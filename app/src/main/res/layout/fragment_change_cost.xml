@@ -6,9 +6,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragmentChange"
     android:layout_width="match_parent"
-    android:layout_height="550dp"
+    android:layout_height="match_parent"
     tools:context=".ui.change.cost.ChangeFragmentCost">
 
+ <TextView
+     android:id="@+id/dateToTextView"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="16dp"
+     android:layout_marginTop="5dp"
+     android:layout_marginEnd="155dp"
+     android:text="01.08.2022"
+     android:textColor="@color/black"
+     android:textSize="20sp"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toEndOf="@+id/dateFromText"
+     app:layout_constraintTop_toTopOf="parent" />
+
+ <TextView
+     android:id="@+id/dateFromText"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="115dp"
+     android:layout_marginTop="5dp"
+     android:text="@string/from"
+     android:textColor="@color/black"
+     android:textSize="20sp"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toTopOf="parent" />
+
+ <TextView
+     android:id="@+id/dateToText"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="115dp"
+     android:text="@string/to"
+     android:textColor="@color/black"
+     android:textSize="20sp"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/dateFromText" />
+
+ <TextView
+     android:id="@+id/dateFromTextView"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_marginStart="12dp"
+     android:text="06.09.2022"
+     android:textColor="@color/black"
+     android:textSize="20sp"
+     app:layout_constraintStart_toEndOf="@+id/dateToText"
+     app:layout_constraintTop_toBottomOf="@+id/dateToTextView" />
 
  <LinearLayout
      android:id="@+id/costCategoriesTop"
@@ -17,15 +64,14 @@
      android:orientation="horizontal"
      app:layout_constraintEnd_toEndOf="parent"
      app:layout_constraintStart_toStartOf="parent"
-     app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+     app:layout_constraintTop_toBottomOf="@+id/dateToText"></LinearLayout>
 
  <com.github.mikephil.charting.charts.PieChart
      android:id="@+id/pieChartCost"
      android:layout_width="325dp"
      android:layout_height="227dp"
-     android:layout_marginStart="181dp"
-     android:layout_marginTop="3dp"
-     android:layout_marginEnd="181dp"
+     android:layout_marginStart="43dp"
+     android:layout_marginEnd="43dp"
      app:layout_constraintEnd_toEndOf="parent"
      app:layout_constraintStart_toStartOf="parent"
      app:layout_constraintTop_toBottomOf="@+id/costCategoriesTop" />
@@ -34,7 +80,6 @@
      android:id="@+id/costCategoriesContainer"
      android:layout_width="match_parent"
      android:layout_height="100dp"
-     android:layout_marginEnd="1dp"
      android:orientation="horizontal"
      app:layout_constraintEnd_toEndOf="parent"
      app:layout_constraintStart_toStartOf="parent"

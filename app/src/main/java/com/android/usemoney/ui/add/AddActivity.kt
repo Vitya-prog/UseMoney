@@ -24,7 +24,7 @@ class AddActivity : AppCompatActivity() {
         }
         when(bundle?.getString("edit")){
             "category"->switchFragment(AddCategoryFragment.newInstance(bundle.getString("editCategory")!!))
-//            "plan"->switchFragment(AddPlanFragment())
+            "plan"->switchFragment(AddPlanFragment())
             "change"->switchFragment(AddChangeFragment.newInstance(bundle.getString("editChange")!!))
         }
 

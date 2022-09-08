@@ -1,71 +1,45 @@
 package com.android.usemoney.ui.change.cost
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.android.usemoney.data.model.Category
+import com.android.usemoney.data.local.Category
 import com.android.usemoney.repository.CategoryRepository
+import com.android.usemoney.repository.CurrencyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @HiltViewModel
 class ChangeCostViewModel @Inject constructor(
-  private val categoryRepository: CategoryRepository
+  private val categoryRepository: CategoryRepository,
+  private val currencyRepository: CurrencyRepository
 ) :ViewModel() {
 
+    private val mutableDateFrom = MutableLiveData<Long>()
+    val dateFrom:LiveData<Long> get() = mutableDateFrom
 
-    suspend fun getChangesList(name:String):List<Double>{
-        val changeList = viewModelScope.async {
-            categoryRepository.getChangeList(name)
-        }
-        return changeList.await()
-    }
-    suspend fun getIncomeSum():Double?{
-        val sum = viewModelScope.async {
-            categoryRepository.getIncomeSum()
-        }
-        return sum.await()
-    }
-    suspend fun getCostSum():Double?{
-        val sum = viewModelScope.async {
-        categoryRepository.getCostSum()
-    }
-        return sum.await()}
 
-       suspend fun getCostCategories():List<Category>{
-        val categoryList = viewModelScope.async {
-            categoryRepository.getCostCategories()
-        }
-        return categoryList.await()
 
+    fun selectDate(dateFrom: Long){
+        mutableDateFrom.value = dateFrom
     }
 
-    suspend fun getCostCategory(): Flow<Category> = flow {
-        categoryRepository.getCostCategories().forEach {
-            emit(it)
-        }
+    fun updateCurrency(currency: Double){
+        categoryRepository.updateCurrency(currency)
     }
-    suspend fun getIncomeCategory(): Flow<Category> = flow {
-        categoryRepository.getIncomeCategories().forEach {
-            emit(it)
-        }
-    }
-    fun addCategory(category: Category){
-        categoryRepository.addCategory(category)
-    }
-    suspend fun getIncomeCategories():List<Category>{
-        val categoryList = viewModelScope.async {
-            categoryRepository.getIncomeCategories()
-        }
-       return categoryList.await()
 
+    fun getCostCategories(dateTo:Long,dateFrom:Long):LiveData<List<Category>>{
+       return categoryRepository.getCostCategories(dateTo,dateFrom)
     }
-    fun updateCategory(category: Category){
-        categoryRepository.updateCategory(category)
-    }
+    val incomeCategories = categoryRepository.getIncomeCategories()
+    var currency = currencyRepository.getCurrency()
     fun deleteCategory(category:Category){
         categoryRepository.deleteCategory(category)
+    }
+
+    suspend fun getSum():Double{
+        val incomeSum: Double = categoryRepository.getIncomeSum() ?: 0.0
+        val costSum: Double = categoryRepository.getCostSum() ?: 0.0
+        return incomeSum-costSum
     }
 }
