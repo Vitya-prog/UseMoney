@@ -14,7 +14,7 @@ interface CategoryDao {
     @Query("SELECT id,name,type,(SELECT DISTINCT sum(value) FROM change WHERE change.name = category.name AND change.type ='Доходы') as value,icon,color FROM category WHERE type = 'Доходы'")
     fun getIncomeCategories(): LiveData<List<Category>>
     @Query("Select * FROM category WHERE id =:id")
-    suspend fun getCategory(id: UUID): Category
+    fun getCategory(id: UUID): LiveData<Category>
     @Query("UPDATE change SET currency = :currency")
     fun updateCurrency(currency: Double)
     @Query("SELECT SUM(value) FROM change WHERE type ='Доходы'")

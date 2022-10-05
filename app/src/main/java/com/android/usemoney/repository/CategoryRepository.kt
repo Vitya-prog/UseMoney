@@ -29,13 +29,9 @@ class CategoryRepository @Inject constructor(
         }
     }
 
-    suspend fun getCategory(id:UUID):Category = categoryDao.getCategory(id)
-
+    fun getCategory(id:UUID):LiveData<Category> = categoryDao.getCategory(id)
     suspend fun getIncomeSum():Double? = categoryDao.getIncomeSum()
-
     suspend fun getCostSum():Double? = categoryDao.getCostSum()
-
-
     fun getCostCategories(dateTo: Long, dateFrom: Long): LiveData<List<Category>> = categoryDao.getCostCategories(dateTo, dateFrom)
 
     fun getIncomeCategories(): LiveData<List<Category>> = categoryDao.getIncomeCategories()

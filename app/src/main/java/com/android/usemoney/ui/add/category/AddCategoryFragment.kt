@@ -43,25 +43,34 @@ class AddCategoryFragment : Fragment() {
         adapter = IconAdapter()
         adapter.submitList(data)
         binding.inputIconRecyclerView.adapter = adapter
-            if (categoryId != null){
-                loadCategory()
+        val category = Category()
+            if (categoryId != null) {
+                addCategoryViewModel.loadCategory(UUID.fromString(categoryId))
                 binding.okButton.text = "Обновить"
             }
 
        return binding.root
     }
 
-    private fun loadCategory() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val category = addCategoryViewModel.getCategory(UUID.fromString(categoryId))
-            binding.inputNameCategory.setText(category.name)
-            if (category.type == "Доходы"){
-                binding.incomeRadioButton.isChecked = true
-            } else {
-                binding.costRadioButton.isChecked = true
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        addCategoryViewModel.category.observe(
+            viewLifecycleOwner
+        ){
+            Log.d(TAG,"$it")
+            updateUI(it)
         }
     }
+
+    private fun updateUI(category: Category) {
+        binding.inputNameCategory.setText(category.name)
+        if (category.type == "Доходы"){
+            binding.incomeRadioButton.isChecked = true
+        } else {
+            binding.costRadioButton.isChecked = true
+        }
+    }
+
 
     private fun loadIcon() {
     for (i in 1..28){

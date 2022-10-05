@@ -23,17 +23,13 @@ class ChartFragment : Fragment() {
   private lateinit var binding:FragmentChartBinding
     private val chartViewModel: ChangeCostViewModel by viewModels()
     private val currency = listOf("$","₴","€","£")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentChartBinding.inflate(inflater,container,false)
         loadData()
-        chartViewModel.currency.observe(
-            viewLifecycleOwner
-        ){
-            Log.d(TAG,it.toString())
-        }
         return binding.root
     }
 private fun loadData(){
@@ -66,13 +62,28 @@ private fun loadData(){
 
                binding.currencyTextView.text = currency[p2]
                 when (p2) {
-                    0->chartViewModel.updateCurrency(0.027)
-                    1->chartViewModel.updateCurrency(1.0)
-                    2->chartViewModel.updateCurrency(0.027)
-                    3->chartViewModel.updateCurrency(0.024)
+                    0->updateCurrency("USD")
+                    1->updateCurrency("UAH")
+                    2->updateCurrency("EUR")
+                    3->updateCurrency("GBP")
                 }
             }
 
+            fun updateCurrency(name:String) {
+                chartViewModel.currency.observe(
+                    viewLifecycleOwner
+                ) {
+                    Log.d(TAG, it.toString())
+
+                    when (name) {
+                        "USD" -> chartViewModel.updateCurrency(it[2].sale)
+                        "UAH" -> chartViewModel.updateCurrency(1.0)
+                        "EUR" -> chartViewModel.updateCurrency(it[0].sale)
+                        "GBP" -> chartViewModel.updateCurrency(it[1].sale)
+
+                    }
+                }
+            }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                Log.d(TAG,"Nothing Select")
             }

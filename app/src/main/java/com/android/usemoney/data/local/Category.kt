@@ -9,9 +9,9 @@ import java.util.*
 @Entity(tableName="category")
 data class Category(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
-    val name: String,
-    val type:String,
+    val name: String = "",
+    val type:String = "Расходы",
     var value:Double = 0.0,
-    val icon: String,
-    val color:String
+    val icon: String="R.drawable.cafe_icon",
+    val color:String = ""
 )
