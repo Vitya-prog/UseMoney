@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".add_data.AddActivity">
+    tools:context=".ui.add.AddActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/addFragmentContainerView"
-        android:name="com.android.usemoney.add_data.category.AddCategoryFragment"
+        android:name="com.android.usemoney.ui.add.category.AddCategoryFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

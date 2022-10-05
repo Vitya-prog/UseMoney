@@ -1,28 +1,49 @@
 package com.android.usemoney.ui.change.cost
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.android.usemoney.entities.CategoryEntity
-import com.android.usemoney.repository.UseMoneyRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import com.android.usemoney.data.local.Category
+import com.android.usemoney.repository.CategoryRepository
+import com.android.usemoney.repository.CurrencyRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ChangeCostViewModel:ViewModel() {
-    private val useMoneyRepository = UseMoneyRepository.get()
+@HiltViewModel
+class ChangeCostViewModel @Inject constructor(
+  private val categoryRepository: CategoryRepository,
+  private val currencyRepository: CurrencyRepository
+) :ViewModel() {
 
-    suspend fun getChangesList(name:String):List<Double>{
-        val changeList = viewModelScope.async {
-            useMoneyRepository.getChangeList(name)
-        }
-        return changeList.await()
+    private val mutableDateFrom = MutableLiveData<Long>()
+    val dateFrom:LiveData<Long> get() = mutableDateFrom
+
+
+
+    fun selectDate(dateFrom: Long){
+        mutableDateFrom.value = dateFrom
     }
-    suspend fun getCostCategories():List<CategoryEntity>{
-        val categoryList = viewModelScope.async(Dispatchers.IO) {
-            useMoneyRepository.getCostCategories()
-        }
-        return categoryList.await()
+
+    fun updateCurrency(currency: Double){
+        categoryRepository.updateCurrency(currency)
     }
-    fun addCategory(category: CategoryEntity){
-        useMoneyRepository.addCategory(category)
+
+    fun getCostCategories(dateTo:Long,dateFrom:Long):LiveData<List<Category>>{
+       return categoryRepository.getCostCategories(dateTo,dateFrom)
+    }
+    val incomeCategories = categoryRepository.getIncomeCategories()
+    var currency = currencyRepository.getCurrency()
+    fun deleteCategory(category:Category){
+        categoryRepository.deleteCategory(category)
+    }
+
+    suspend fun getSum():Double{
+        val incomeSum: Double = categoryRepository.getIncomeSum() ?: 0.0
+        val costSum: Double = categoryRepository.getCostSum() ?: 0.0
+        return incomeSum-costSum
+    }
+
+    fun addCategory(category: Category) {
+    categoryRepository.addCategory(category)
     }
 }

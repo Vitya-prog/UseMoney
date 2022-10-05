@@ -1,13 +1,18 @@
 package com.android.usemoney
 
 import android.app.Application
-import com.android.usemoney.repository.UseMoneyRepository
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
-class UseMoneyApplication: Application()
-{
-    override fun onCreate() {
-        super.onCreate()
-        UseMoneyRepository.initialize(this)
-    }
+@HiltAndroidApp
+class UseMoneyApplication: Application(),Configuration.Provider{
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override fun getWorkManagerConfiguration() =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 }
-

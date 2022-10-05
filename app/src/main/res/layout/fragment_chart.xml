@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.change.ChartFragment"
+    android:id="@+id/chartFragment">
+
+    <Button
+        android:id="@+id/add_cost_category_button"
+        style="@style/Widget.Material3.Button.TextButton.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="251dp"
+        android:layout_marginBottom="51dp"
+        android:drawableLeft="@drawable/category_add_icon"
+        android:text="@string/add"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/accountTextViewCost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="16dp"
+        android:text="Всего"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/currencyTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/changeContainerView"
+        android:layout_width="414dp"
+        android:layout_height="627dp"
+        android:name ="com.android.usemoney.ui.change.cost.ChangeFragmentCost"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountTextViewCost" />
+
+    <TextView
+        android:id="@+id/currencyTextView"
+        android:layout_width="20dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="19dp"
+        android:text="₴"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/accountTextViewCost"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="38dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="19dp"
+        android:entries="@array/currency"
+        app:layout_constraintStart_toEndOf="@+id/currencyTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,17 +1,21 @@
 package com.android.usemoney.ui.history
 
 import androidx.lifecycle.ViewModel
-import com.android.usemoney.entities.ChangeEntity
-import com.android.usemoney.repository.UseMoneyRepository
+import com.android.usemoney.data.local.Change
+import com.android.usemoney.repository.ChangeRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HistoryViewModel : ViewModel() {
-private val useMoneyRepository = UseMoneyRepository.get()
-    val historyListLiveData = useMoneyRepository.getChanges()
+@HiltViewModel
+class HistoryViewModel @Inject constructor(
+    private val changeRepository: ChangeRepository
+) : ViewModel() {
+    val historyListLiveData = changeRepository.getChanges()
 
-    fun addChange(history: ChangeEntity){
-        useMoneyRepository.addChanges(history)
+    fun addChange(history: Change){
+        changeRepository.addChanges(history)
     }
-    fun deleteChange(history: ChangeEntity){
-        useMoneyRepository.deleteChanges(history)
+    fun deleteChange(history: Change){
+        changeRepository.deleteChanges(history)
     }
 }
