@@ -33,6 +33,7 @@ class AddCategoryFragment : Fragment() {
                             R.drawable.family_icon,R.drawable.gift_icon,
                             R.drawable.salary_icon,R.drawable.transport_icon,R.drawable.unknown_icon)
     private val addCategoryViewModel: AddCategoryViewModel by viewModels()
+    private lateinit var category: Category
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,12 +44,9 @@ class AddCategoryFragment : Fragment() {
         adapter = IconAdapter()
         adapter.submitList(data)
         binding.inputIconRecyclerView.adapter = adapter
-        val category = Category()
             if (categoryId != null) {
                 addCategoryViewModel.loadCategory(UUID.fromString(categoryId))
-                binding.okButton.text = "Обновить"
             }
-
        return binding.root
     }
 
@@ -56,9 +54,11 @@ class AddCategoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         addCategoryViewModel.category.observe(
             viewLifecycleOwner
-        ){
-            Log.d(TAG,"$it")
-            updateUI(it)
+        ){category ->
+            category?.let {
+                this.category = category
+            }
+            updateUI(category)
         }
     }
 
@@ -117,6 +117,12 @@ class AddCategoryFragment : Fragment() {
         binding.cancelButton.setOnClickListener {
             AddActivity.closeActivity(activity as AddActivity)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        category.name = binding.inputNameCategory.text.toString()
+        addCategoryViewModel.updateCategory(category)
     }
     private fun getRandomColor(): String {
         val random = Random()

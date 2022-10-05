@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.fragment.app.*
 import androidx.lifecycle.lifecycleScope
+import com.android.usemoney.data.local.Category
 import com.android.usemoney.databinding.FragmentChartBinding
 import com.android.usemoney.ui.add.AddActivity
 import com.android.usemoney.ui.change.cost.ChangeCostViewModel
@@ -51,8 +52,11 @@ private fun loadData(){
     override fun onStart() {
         super.onStart()
         binding.addCostCategoryButton.setOnClickListener {
+            val category = Category()
+            chartViewModel.addCategory(category)
             val intent = Intent(context, AddActivity::class.java)
-            intent.putExtra("add", "category")
+            intent.putExtra("edit","category")
+            intent.putExtra("editCategory","${category.id}")
             context?.startActivity(intent)
         }
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemClickListener,

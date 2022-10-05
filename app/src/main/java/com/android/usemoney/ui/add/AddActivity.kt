@@ -18,7 +18,6 @@ class AddActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add)
         val bundle = intent.extras
         when(bundle?.getString("add")){
-         "category"->switchFragment(AddCategoryFragment())
          "plan"->switchFragment(AddPlanFragment())
          "change"->switchFragment(AddChangeFragment())
         }

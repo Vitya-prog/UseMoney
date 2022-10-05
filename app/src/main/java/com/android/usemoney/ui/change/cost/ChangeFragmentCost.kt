@@ -40,7 +40,6 @@ private const val TAG ="ChangeFragmentCost"
 class ChangeFragmentCost : Fragment() {
     private lateinit var binding:FragmentChangeCostBinding
     private val costViewModel: ChangeCostViewModel by viewModels()
-    private var i = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +54,8 @@ class ChangeFragmentCost : Fragment() {
 
 
 
-    private fun showCategory(category:Category,size:Int){
+    private fun showCategory(categories:List<Category>){
+        for (i in categories.indices){
         val button = Button(requireContext(), null, R.style.categoryButton)
         val params = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -64,8 +64,8 @@ class ChangeFragmentCost : Fragment() {
                 val shape = GradientDrawable()
                 shape.shape = GradientDrawable.RECTANGLE
                 shape.cornerRadius = 50f
-                shape.setColor(Color.parseColor(category.color))
-                val drawable = resources.getDrawable(resources.getIdentifier(category.icon,"drawable",activity?.packageName))
+                shape.setColor(Color.parseColor(categories[i].color))
+                val drawable = resources.getDrawable(resources.getIdentifier(categories[i].icon,"drawable",activity?.packageName))
                 val layerDrawable = LayerDrawable(arrayOf(shape, drawable))
                 params.setMargins(20, 0, 0, 0)
                 button.layoutParams = params
@@ -76,35 +76,34 @@ class ChangeFragmentCost : Fragment() {
                     null
                 )
                 button.text =
-                    "${category.name}\n${(category.value*100).roundToInt() / 100.0}"
+                    "${categories[i].name}\n${(categories[i].value*100).roundToInt() / 100.0}"
                 button.textSize = 12f
                 button.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 button.setOnClickListener {
                     val intent = Intent(context, AddActivity::class.java)
                     intent.putExtra("edit","category")
-                    intent.putExtra("editCategory","${category.id}")
+                    intent.putExtra("editCategory","${categories[i].id}")
                     context?.startActivity(intent)
                 }
                 button.setOnLongClickListener {
-                    costViewModel.deleteCategory(category)
+                    costViewModel.deleteCategory(categories[i])
                     true
                 }
-                if ((i <= 2) && (i < size)) {
+                if ((i <= 2) && (i < categories.size)) {
                     params.setMargins(175, 0, 0, 0)
-                    binding.costCategoriesTop.addView(button)
+                    binding.costCategoriesTop.addView(button,0)
                 }
-                if ((i >= 3) && (i <= 5) && (i < size)) {
+                if ((i >= 3) && (i <= 5) && (i < categories.size)) {
                     params.setMargins(175, 0, 0, 0)
                     binding.costCategoriesBottom.addView(button)
                 }
-                if ((i >= 6) && (i < size)) {
+                if ((i >= 6) && (i < categories.size)) {
                     binding.costCategoriesContainer.addView(button)
                 }
-        i++
+        }
 
     }
     private fun loadData() {
-        i=0
         val dateFrom = SimpleDateFormat("dd.MM.yyyy").parse("${binding.dateFromTextView.text}")!!
         val dateTo = SimpleDateFormat("dd.MM.yyyy").parse("${binding.dateToTextView.text}")!!
         costViewModel.selectDate(dateFrom.time)
@@ -115,17 +114,11 @@ class ChangeFragmentCost : Fragment() {
                 viewLifecycleOwner
             )  { categories->
                 setDataToPieChart(categories)
-                categories.forEach { category ->
-                    showCategory(category,categories.size)
-                }
+                showCategory(categories)
             }
         }
 
 }
-
-
-
-
     companion object {
         fun newInstance(): ChangeFragmentCost {
           return ChangeFragmentCost()

@@ -42,4 +42,8 @@ class ChangeCostViewModel @Inject constructor(
         val costSum: Double = categoryRepository.getCostSum() ?: 0.0
         return incomeSum-costSum
     }
+
+    fun addCategory(category: Category) {
+    categoryRepository.addCategory(category)
+    }
 }
