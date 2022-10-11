@@ -12,6 +12,6 @@ data class Category(
     var name: String = "Example",
     val type:String = "Расходы",
     var value:Double = 0.0,
-    val icon: String="cafe_icon",
-    val color:String = "#89CFF0"
+    var icon: String="cafe_icon",
+    var color:String = "#89CFF0"
 )

@@ -40,13 +40,14 @@ private const val TAG ="ChangeFragmentCost"
 class ChangeFragmentCost : Fragment() {
     private lateinit var binding:FragmentChangeCostBinding
     private val costViewModel: ChangeCostViewModel by viewModels()
-
+    var i = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentChangeCostBinding.inflate(inflater,container,false)
         initPieChart()
+        i=0
         loadData()
         return binding.root
     }
@@ -54,8 +55,8 @@ class ChangeFragmentCost : Fragment() {
 
 
 
-    private fun showCategory(categories:List<Category>){
-        for (i in categories.indices){
+    private fun showCategory(categories:Category,size:Int){
+        Log.d(TAG,"$i")
         val button = Button(requireContext(), null, R.style.categoryButton)
         val params = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -64,8 +65,8 @@ class ChangeFragmentCost : Fragment() {
                 val shape = GradientDrawable()
                 shape.shape = GradientDrawable.RECTANGLE
                 shape.cornerRadius = 50f
-                shape.setColor(Color.parseColor(categories[i].color))
-                val drawable = resources.getDrawable(resources.getIdentifier(categories[i].icon,"drawable",activity?.packageName))
+                shape.setColor(Color.parseColor(categories.color))
+                val drawable = resources.getDrawable(resources.getIdentifier(categories.icon,"drawable",activity?.packageName))
                 val layerDrawable = LayerDrawable(arrayOf(shape, drawable))
                 params.setMargins(20, 0, 0, 0)
                 button.layoutParams = params
@@ -76,31 +77,36 @@ class ChangeFragmentCost : Fragment() {
                     null
                 )
                 button.text =
-                    "${categories[i].name}\n${(categories[i].value*100).roundToInt() / 100.0}"
+                    "${categories.name}\n${(categories.value*100).roundToInt() / 100.0}"
                 button.textSize = 12f
                 button.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 button.setOnClickListener {
                     val intent = Intent(context, AddActivity::class.java)
                     intent.putExtra("edit","category")
-                    intent.putExtra("editCategory","${categories[i].id}")
+                    intent.putExtra("editCategory","${categories.id}")
                     context?.startActivity(intent)
                 }
                 button.setOnLongClickListener {
-                    costViewModel.deleteCategory(categories[i])
+                    costViewModel.deleteCategory(categories)
                     true
                 }
-                if ((i <= 2) && (i < categories.size)) {
+                if ((i <= 2) && (i < size)) {
                     params.setMargins(175, 0, 0, 0)
-                    binding.costCategoriesTop.addView(button,0)
+                    binding.costCategoriesTop.addView(button)
+                    Log.d(TAG,"TOP")
+                    i++
                 }
-                if ((i >= 3) && (i <= 5) && (i < categories.size)) {
+                if ((i >= 3) && (i <= 5) && (i < size)) {
                     params.setMargins(175, 0, 0, 0)
-                    binding.costCategoriesBottom.addView(button)
+//                    binding.costCategoriesBottom.addView(button)
+                    Log.d(TAG,"Bottom")
+                    i++
                 }
-                if ((i >= 6) && (i < categories.size)) {
+                if ((i >= 6) && (i < size)) {
+                    Log.d(TAG,"Container")
                     binding.costCategoriesContainer.addView(button)
+                    i++
                 }
-        }
 
     }
     private fun loadData() {
@@ -114,7 +120,9 @@ class ChangeFragmentCost : Fragment() {
                 viewLifecycleOwner
             )  { categories->
                 setDataToPieChart(categories)
-                showCategory(categories)
+                categories.forEach { category->
+                    showCategory(category,categories.size)
+                }
             }
         }
 

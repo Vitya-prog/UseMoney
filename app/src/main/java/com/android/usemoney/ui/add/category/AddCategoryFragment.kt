@@ -122,6 +122,8 @@ class AddCategoryFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         category.name = binding.inputNameCategory.text.toString()
+        category.icon = icon.toString()
+        category.color = getRandomColor()
         addCategoryViewModel.updateCategory(category)
     }
     private fun getRandomColor(): String {

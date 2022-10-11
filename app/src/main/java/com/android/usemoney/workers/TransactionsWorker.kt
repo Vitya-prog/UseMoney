@@ -133,5 +133,5 @@ class TransactionsWorker @AssistedInject constructor(
         }
 }
 
-//arr2 =[[ ,  4149499396308270 ,  239060 ,  2022-08-03 ,  03:48:00 ,  8.00 UAH ,  ,  -8.00 UAH ,  1530.00 UAH ,  PrivatBank,  CP980U48 ,  Округление остатка на Копилку
+//arr2 =[[ , cardnubmer ,  239060 ,  2022-08-03 ,  03:48:00 ,  8.00 UAH ,  ,  -8.00 UAH ,  1530.00 UAH ,  PrivatBank,  CP980U48 ,  Округление остатка на Копилку
 //    ]]
